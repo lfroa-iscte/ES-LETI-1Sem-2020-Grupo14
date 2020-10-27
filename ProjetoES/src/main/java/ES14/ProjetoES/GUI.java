@@ -32,8 +32,8 @@ public class GUI {
 		JPanel pmd = new JPanel(new BorderLayout());
 		JPanel iPlasma = new JPanel();
 		
-		JPanel botoes = new JPanel(new GridLayout(1,2)); //alterar
-		
+		JPanel botoes = new JPanel(new FlowLayout()); //alterar
+
 		JButton importar = new JButton("Importar Excel");
 		
 		/*
