@@ -12,7 +12,7 @@ import javax.swing.event.*;
 public class GUI {
 
 	private JFrame janela;
-	private JPanel ferramentas;
+	
 	
 	public GUI() {
 		janela = new JFrame("DetetorDefeitos3000");
@@ -26,13 +26,13 @@ public class GUI {
 
 	private void addFrameContent() {
 		
-		ferramentas = new JPanel(new FlowLayout());
+		JPanel ferramentas = new JPanel(new FlowLayout());  //alterar
 		
 		//paineis terão que que ser criados apenas aquando da execução do algoritmo
 		JPanel pmd = new JPanel(new BorderLayout());
 		JPanel iPlasma = new JPanel();
 		
-		JPanel botoes = new JPanel(new FlowLayout()); //alterar
+		JPanel botoes = new JPanel(new FlowLayout());
 
 		JButton importar = new JButton("Importar Excel");
 		
