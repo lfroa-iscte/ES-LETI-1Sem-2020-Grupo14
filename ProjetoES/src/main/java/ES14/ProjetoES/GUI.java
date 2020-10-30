@@ -118,8 +118,8 @@ public class GUI {
 		sheet = workbook.getSheetAt(0);
 
 		DataFormatter dataFormatter = new DataFormatter();
-		headers = new String[12];
-		data = new String[sheet.getLastRowNum()][12];
+		headers = new String[sheet.getRow(0).getLastCellNum()];
+		data = new String[sheet.getLastRowNum()][sheet.getRow(0).getLastCellNum()];
 
 		for (Row row : sheet) {
 			for (Cell cell : row) {
