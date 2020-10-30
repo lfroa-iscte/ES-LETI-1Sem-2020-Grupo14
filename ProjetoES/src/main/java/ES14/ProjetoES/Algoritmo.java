@@ -2,7 +2,9 @@ package ES14.ProjetoES;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.*;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,23 +18,15 @@ public class Algoritmo {
 	private static int iPlasma = 9;
 	private static int pmd = 10;
 
-	private int dciPlasma;
-
-	private int dciPmd;
-
-	private int diiPlasma;
-	private int diiPmd;
-
-	private int adciPlasma;
-	private int adciPmd;
-
-	private int adiiPlasma;
-	private int adiiPmd;
+	private List<Indicador> indicadoresPlasma;
+	private List<Indicador> indicadoresPmd;
 
 	private Sheet sheet;
 
 	public Algoritmo(Sheet sheet) {
 		this.sheet = sheet;
+		indicadoresPlasma = new ArrayList<>();
+		indicadoresPmd = new ArrayList<>();
 		checkDci();
 		checkDii();
 		checkAdci();
@@ -42,19 +36,26 @@ public class Algoritmo {
 	private void checkDci() {
 
 		Iterator<Row> rowIterator = sheet.iterator();
+		int c = 0;
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
 
 			if (row.getRowNum() != 0) {
+				Indicador add1=new Indicador();
+				Indicador add2=new Indicador();
+				indicadoresPlasma.add(add1);
+				indicadoresPmd.add(add2);
+				
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
 
 				if (value == true && value1 == true)
-					dciPlasma++;
+					indicadoresPlasma.get(c).setDci(1);
 
 				if (value == true && value2 == true)
-					dciPmd++;
+					indicadoresPmd.get(c).setDci(1);
+				c++;
 			}
 		}
 	}
@@ -62,19 +63,22 @@ public class Algoritmo {
 	private void checkDii() {
 
 		Iterator<Row> rowIterator = sheet.iterator();
+		int c = 0;
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
 
 			if (row.getRowNum() != 0) {
+				
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
 
 				if (value == false && value1 == true)
-					diiPlasma++;
+					indicadoresPlasma.get(c).setDii(1);
 
 				if (value == false && value2 == true)
-					diiPmd++;
+					indicadoresPmd.get(c).setDii(1);
+				c++;
 			}
 		}
 	}
@@ -82,26 +86,30 @@ public class Algoritmo {
 	private void checkAdci() {
 
 		Iterator<Row> rowIterator = sheet.iterator();
+		int c=0;
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
 
 			if (row.getRowNum() != 0) {
+				
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
 
 				if (value == false && value1 == false)
-					adciPlasma++;
+					indicadoresPlasma.get(c).setAdci(1);
 
 				if (value == false && value2 == false)
-					adciPmd++;
+					indicadoresPmd.get(c).setAdci(1);
+				c++;
 			}
 		}
 	}
-	
+
 	private void checkAdii() {
 
 		Iterator<Row> rowIterator = sheet.iterator();
+		int c=0;
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
 
@@ -111,45 +119,21 @@ public class Algoritmo {
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
 
 				if (value == true && value1 == false)
-					adiiPlasma++;
+					indicadoresPlasma.get(c).setAdii(1);
 
 				if (value == true && value2 == false)
-					adiiPmd++;
+					indicadoresPmd.get(c).setAdii(1);
+				c++;
 			}
 		}
 	}
 
-
-	public int getDciPlasma() {
-		return dciPlasma;
+	public List<Indicador> getIndicadoresPlasma() {
+		return indicadoresPlasma;
 	}
 
-	public int getDciPmd() {
-		return dciPmd;
-	}
-
-	public int getDiiPlasma() {
-		return diiPlasma;
-	}
-
-	public int getDiiPmd() {
-		return diiPmd;
-	}
-	
-	public int getAdciPlasma() {
-		return adciPlasma;
-	}
-
-	public int getAdciPmd() {
-		return adciPmd;
-	}
-	
-	public int getAdiiPlasma() {
-		return adiiPlasma;
-	}
-
-	public int getAdiiPmd() {
-		return adiiPmd;
+	public List<Indicador> getIndicadoresPmd() {
+		return indicadoresPmd;
 	}
 
 	public static void main(String[] args) {
@@ -157,19 +141,11 @@ public class Algoritmo {
 		try {
 			Workbook workbook = WorkbookFactory.create(new File(path));
 			Sheet sheet = workbook.getSheetAt(0);
-			
-			Iterator<Row> rowIterator = sheet.iterator();
-			int t=0;
-			while(rowIterator.hasNext()) {
-				Row row=rowIterator.next();
-				if(row.getRowNum()!=0) {
-					if(row.getCell(11).getBooleanCellValue())
-						t++;
-				}
+
+			Algoritmo alg = new Algoritmo(sheet);
+			for(int i=0; i<alg.getIndicadoresPlasma().size(); i++) {
+				System.out.println("Method ID: "+(i+1)  + " | iPlasma -> " + alg.getIndicadoresPlasma().get(i).getDii() + " " + "PMD -> " + alg.getIndicadoresPmd().get(i).getDii() );
 			}
-			System.out.println("Nº verdadeiros: " + t);
-			//Algoritmo alg = new Algoritmo(sheet);
-		//	System.out.println("iPlasma -> " + alg.getAdiiPlasma() + " " + "PMD -> " + alg.getAdiiPmd());
 		} catch (EncryptedDocumentException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
