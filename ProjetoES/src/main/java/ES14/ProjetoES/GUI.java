@@ -78,7 +78,6 @@ public class GUI {
 					janelaExcel.add(center);
 
 					janelaExcel.setVisible(true);
-
 				}
 
 			}
