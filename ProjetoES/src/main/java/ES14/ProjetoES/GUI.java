@@ -4,23 +4,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Vector;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
 
 public class GUI {
 
@@ -56,8 +49,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser chooser = new JFileChooser(
-						"C:\\Users\\fnpm\\OneDrive\\Ambiente de Trabalho\\ISCTE\\3ºAno\\1º Semestre\\ES\\Defeitos.xlsx");
+				JFileChooser chooser = new JFileChooser(".");
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
 				int returnValue = chooser.showOpenDialog(null);
@@ -67,16 +59,17 @@ public class GUI {
 					String excelPath = selectedFile.getAbsolutePath();
 
 					try {
+						// ler Excel
 						readExcel(excelPath);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 
+					// Janela do Excel
 					JFrame janelaExcel = new JFrame(selectedFile.getName());
 					janelaExcel.pack();
 					janelaExcel.setSize(1200, 900);
-					janelaExcel.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+					janelaExcel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					TableModel table = new DefaultTableModel(data, headers);
 
 					JTable tabela = new JTable(table);
