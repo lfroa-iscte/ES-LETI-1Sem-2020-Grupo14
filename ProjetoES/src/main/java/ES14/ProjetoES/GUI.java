@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -21,6 +22,8 @@ public class GUI {
 	private XSSFSheet sheet;
 	private String[] headers;
 	private String[][] data;
+	private File selectedFile;
+
 
 	public GUI() {
 		janela = new JFrame("DetetorDefeitos3000");
@@ -34,15 +37,12 @@ public class GUI {
 
 	private void addFrameContent() {
 
-		JPanel ferramentas = new JPanel(new FlowLayout()); // alterar
-
-		// paineis terão que que ser criados apenas aquando da execução do algoritmo
-		JPanel pmd = new JPanel(new BorderLayout());
-		JPanel iPlasma = new JPanel();
+		final JPanel ferramentas = new JPanel(new BorderLayout() ); // alterar
 
 		JPanel botoes = new JPanel(new FlowLayout());
 
 		JButton importar = new JButton("Importar Excel");
+		
 
 		importar.addActionListener(new ActionListener() {
 
@@ -55,7 +55,7 @@ public class GUI {
 				int returnValue = chooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 
-					File selectedFile = chooser.getSelectedFile();
+					selectedFile = chooser.getSelectedFile();
 					String excelPath = selectedFile.getAbsolutePath();
 
 					try {
@@ -85,9 +85,35 @@ public class GUI {
 
 		JButton detetar = new JButton("Detetar Defeitos");
 
+		detetar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				String excelPath = selectedFile.getAbsolutePath();
+
+				try {
+					// ler Excel
+					readExcel(excelPath);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+				//Tabela do Excel na GUI
+				TableModel table = new DefaultTableModel(data, headers);
+				TableModel table1 = compileTable(table);
+				
+				JTable excel = new JTable(table1);
+				JScrollPane scroll = new JScrollPane(excel);
+				ferramentas.add(scroll, BorderLayout.CENTER);
+				janela.setVisible(true);
+			}
+
+
+		});
+		
+
 		janela.setLayout(new BorderLayout());
-		ferramentas.add(pmd);
-		ferramentas.add(iPlasma);
 
 		botoes.add(detetar);
 		botoes.add(importar);
@@ -105,7 +131,8 @@ public class GUI {
 		new GUI().open();
 	}
 
-	public void readExcel(String path) throws Exception {
+
+	private void readExcel(String path) throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook(new File(path));
 		sheet = workbook.getSheetAt(0);
 
@@ -124,4 +151,31 @@ public class GUI {
 			}
 		}
 	}
+	
+	//colunas especificas para a tabela na GUI
+	private TableModel compileTable(TableModel table) {
+		
+		TableModel table1 = new DefaultTableModel(table.getRowCount(), 3);
+		
+		for(int i=0; i<table.getRowCount(); i++) {
+			table1.setValueAt(table.getValueAt(i, 0), i, 0);
+			table1.setValueAt(table.getValueAt(i, 10), i, 1);
+			table1.setValueAt(table.getValueAt(i, 11), i, 2);
+			
+			if(table1.getValueAt(i,1) == "TRUE") {
+				table1.setValueAt("DETETADO", i, 1);
+			}else if( table1.getValueAt(i,1) == "FALSE" ) {
+				table1.setValueAt("NÃO DETETADO", i, 1);
+			}
+			
+			if(table1.getValueAt(i,2) == "TRUE") {
+				table1.setValueAt("DETETADO", i, 2);
+			}else if( table1.getValueAt(i,2) == "FALSE" ) {
+				table1.setValueAt("NÃO DETETADO", i, 2);
+			}
+		}
+		
+		return table1;
+	}
+
 }
