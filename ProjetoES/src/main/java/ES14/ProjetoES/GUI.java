@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.naming.InterruptedNamingException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -25,6 +24,13 @@ public class GUI {
 	private String[][] data;
 	private File selectedFile;
 	private TableModel table;
+	private JPanel painelAux;
+
+	/*
+	 * Boolean para verificar que não é a primeira vez a adicionar o painel dos
+	 * metodos
+	 */
+	private boolean aux = false;
 
 	public GUI() {
 		janela = new JFrame("DetetorDefeitos3000");
@@ -93,26 +99,31 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (aux) {
+					ferramentas.remove(painelAux);
+				}
 
+				String[] a = { "MethodID" };
 				String ferramentaSelecionada = (String) flags2.getSelectedItem(); // falta o caso de "regra a definir"
-
-				JPanel painelMetodos = new JPanel(new FlowLayout()); // experimentar com gridLayout
-				JPanel painelResultados = new JPanel(new FlowLayout());
 
 				Algoritmo alg = new Algoritmo(sheet, ferramentaSelecionada);
 
-				String[] a = { "MethodID" };
-
+				painelAux = new JPanel(new GridLayout(1, 2));
+				JPanel painelMetodos = new JPanel(new FlowLayout()); // experimentar com gridLayout
+				JPanel painelResultados = new JPanel(new FlowLayout());
 				JTable tabelaMethodID = new JTable(arrayToMatrix(alg.getMethods()), a);
-
-				painelMetodos.add(tabelaMethodID);
 				JScrollPane scroll = new JScrollPane(tabelaMethodID);
 
-				JPanel painelAux = new JPanel(new GridLayout(1, 2));
-				painelAux.add(scroll);
+				painelMetodos.add(scroll);
+
+				painelAux.removeAll();
+				painelAux.add(painelMetodos);
 				painelAux.add(painelResultados);
 				ferramentas.add(painelAux, BorderLayout.CENTER);
+
 				janela.setVisible(true);
+
+				aux = true;
 			}
 
 		});
@@ -154,32 +165,6 @@ public class GUI {
 				}
 			}
 		}
-	}
-
-	// colunas especificas para a tabela na GUI
-	private TableModel compileTable(TableModel table) {
-
-		TableModel table1 = new DefaultTableModel(table.getRowCount(), 1);
-
-		for (int i = 0; i < table.getRowCount(); i++) {
-			table1.setValueAt(table.getValueAt(i, 0), i, 0);
-			// table1.setValueAt(table.getValueAt(i, 10), i, 1);
-			// table1.setValueAt(table.getValueAt(i, 11), i, 2);
-
-			if (table1.getValueAt(i, 1) == "TRUE") {
-				table1.setValueAt("DETETADO", i, 1);
-			} else if (table1.getValueAt(i, 1) == "FALSE") {
-				table1.setValueAt("NÃO DETETADO", i, 1);
-			}
-
-			if (table1.getValueAt(i, 2) == "TRUE") {
-				table1.setValueAt("DETETADO", i, 2);
-			} else if (table1.getValueAt(i, 2) == "FALSE") {
-				table1.setValueAt("NÃO DETETADO", i, 2);
-			}
-		}
-
-		return table1;
 	}
 
 	private String[][] arrayToMatrix(ArrayList<Integer> aux) {
