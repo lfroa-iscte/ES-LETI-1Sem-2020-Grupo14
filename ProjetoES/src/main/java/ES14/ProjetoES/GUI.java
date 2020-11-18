@@ -4,7 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
+import javax.naming.InterruptedNamingException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -97,11 +99,20 @@ public class GUI {
 				JPanel painelMetodos = new JPanel(new FlowLayout()); // experimentar com gridLayout
 				JPanel painelResultados = new JPanel(new FlowLayout());
 
-				//Algoritmo alg = new Algoritmo(sheet, ferramentaSelecionada );				
+				Algoritmo alg = new Algoritmo(sheet, ferramentaSelecionada);
+
+				String[] a = {"MethodID"};
+				
+				System.out.println("Botao detetar");
+				JTable tabelaMethodID = new JTable( arrayToMatrix(alg.getMethods()), a);				
+				
+				painelMetodos.add(tabelaMethodID);
+				JScrollPane scroll = new JScrollPane(tabelaMethodID);
+				
 				
 
 				JPanel painelAux = new JPanel(new GridLayout(1, 2));
-				painelAux.add(painelMetodos);
+				painelAux.add(scroll);
 				painelAux.add(painelResultados);
 				ferramentas.add(painelAux, BorderLayout.CENTER);
 				janela.setVisible(true);
@@ -174,4 +185,17 @@ public class GUI {
 		return table1;
 	}
 
+	private String[][] arrayToMatrix(ArrayList<Integer> aux) {
+		System.out.println("Entrou");
+		String[][] aux1 = new String[aux.size()][1];
+		System.out.println("antes for"); 
+		for (Integer i : aux) {
+			
+		
+			System.out.println("Entou no for" + i.toString());
+			aux1[i][0] = aux.get(i).toString();
+			System.out.println(aux.get(i).toString());
+		}
+		return aux1;
+	}
 }
