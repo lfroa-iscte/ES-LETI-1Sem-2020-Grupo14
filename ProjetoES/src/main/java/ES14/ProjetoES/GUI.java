@@ -92,22 +92,13 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				String regraSelecionada = (String) flags2.getSelectedItem(); // falta o caso de "regra a definir"
+				String ferramentaSelecionada = (String) flags2.getSelectedItem(); // falta o caso de "regra a definir"
 
 				JPanel painelMetodos = new JPanel(new FlowLayout()); // experimentar com gridLayout
 				JPanel painelResultados = new JPanel(new FlowLayout());
 
-				// teste exemplo
-				String data[][] = { { "101" }, { "102" }, { "101" } };
-				String column[] = { "ID" };
-				JTable jt = new JTable(data, column);
+				//Algoritmo alg = new Algoritmo(sheet, ferramentaSelecionada );				
 				
-				String data1[][] = { { "101", "14", "18", "70" } };
-				String column1[] = { "ADI", "ADC", "ADCI", "ADII" };
-				JTable jt1 = new JTable(data1, column1);
-				
-				painelMetodos.add(jt);
-				painelResultados.add(jt1);
 
 				JPanel painelAux = new JPanel(new GridLayout(1, 2));
 				painelAux.add(painelMetodos);
