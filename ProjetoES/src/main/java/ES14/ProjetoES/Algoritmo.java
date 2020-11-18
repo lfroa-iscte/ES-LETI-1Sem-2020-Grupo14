@@ -2,6 +2,8 @@ package ES14.ProjetoES;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.poi.*;
@@ -15,7 +17,10 @@ public class Algoritmo {
 	private static int isLong = 8;
 	private static int iPlasma = 9;
 	private static int pmd = 10;
-
+	
+	private ArrayList<Integer> methods;
+	private HashMap<String, Integer> indicadores;
+	
 	private int dciPlasma;
 
 	private int dciPmd;
@@ -31,15 +36,39 @@ public class Algoritmo {
 
 	private Sheet sheet;
 
-	public Algoritmo(Sheet sheet) {
+	public Algoritmo(Sheet sheet, int ferramenta) {
 		this.sheet = sheet;
-		checkDci();
-		checkDii();
-		checkAdci();
-		checkAdii();
+		methods=new ArrayList<>();
+		
+		retMethods(ferramenta);
+		checkDci(ferramenta);
+		checkDii(ferramenta);
+		checkAdci(ferramenta);
+		checkAdii(ferramenta);
+	}
+	
+	private void retMethods(int ferramenta) {
+		
+		Iterator<Row> rowIterator = sheet.iterator();
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+
+			if (row.getRowNum() != 0) {
+				if(ferramenta==0) {
+					Boolean value = row.getCell(iPlasma).getBooleanCellValue();
+					if(value)
+						methods.add(row.getRowNum());
+				}
+				if(ferramenta==1) {
+					Boolean value = row.getCell(pmd).getBooleanCellValue();
+					if(value)
+						methods.add(row.getRowNum());
+				}
+			}
+		}
 	}
 
-	private void checkDci() {
+	private void checkDci(int ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -59,7 +88,7 @@ public class Algoritmo {
 		}
 	}
 
-	private void checkDii() {
+	private void checkDii(int ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -79,7 +108,7 @@ public class Algoritmo {
 		}
 	}
 
-	private void checkAdci() {
+	private void checkAdci(int ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -99,7 +128,7 @@ public class Algoritmo {
 		}
 	}
 	
-	private void checkAdii() {
+	private void checkAdii(int ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -151,25 +180,23 @@ public class Algoritmo {
 	public int getAdiiPmd() {
 		return adiiPmd;
 	}
+	
+	public ArrayList<Integer> getMethods(){
+		return methods;
+	}
 
 	public static void main(String[] args) {
 		String path = new String("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx");
 		try {
 			Workbook workbook = WorkbookFactory.create(new File(path));
 			Sheet sheet = workbook.getSheetAt(0);
+			Algoritmo alg=new Algoritmo(sheet, 0);
 			
-			Iterator<Row> rowIterator = sheet.iterator();
-			int t=0;
-			while(rowIterator.hasNext()) {
-				Row row=rowIterator.next();
-				if(row.getRowNum()!=0) {
-					if(row.getCell(11).getBooleanCellValue())
-						t++;
-				}
+			ArrayList<Integer> list=alg.getMethods();
+			
+			for(Integer i: list) {
+				System.out.println(i);
 			}
-			System.out.println("Nº verdadeiros: " + t);
-			//Algoritmo alg = new Algoritmo(sheet);
-		//	System.out.println("iPlasma -> " + alg.getAdiiPlasma() + " " + "PMD -> " + alg.getAdiiPmd());
 		} catch (EncryptedDocumentException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
