@@ -3,6 +3,7 @@ package ES14.ProjetoES;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.poi.*;
@@ -18,6 +19,7 @@ public class Algoritmo {
 	private static int pmd = 10;
 	
 	private ArrayList<Integer> methods;
+	private HashMap<String, Integer> indicadores;
 	
 	private int dciPlasma;
 
