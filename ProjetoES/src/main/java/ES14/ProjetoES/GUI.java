@@ -53,7 +53,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser chooser = new JFileChooser(".");
+				JFileChooser chooser = new JFileChooser("C:\\Users\\fnpm\\OneDrive\\ISCTE\\3ºAno\\1º Semestre\\ES");
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
 				int returnValue = chooser.showOpenDialog(null);
@@ -101,15 +101,12 @@ public class GUI {
 
 				Algoritmo alg = new Algoritmo(sheet, ferramentaSelecionada);
 
-				String[] a = {"MethodID"};
-				
-				System.out.println("Botao detetar");
-				JTable tabelaMethodID = new JTable( arrayToMatrix(alg.getMethods()), a);				
-				
+				String[] a = { "MethodID" };
+
+				JTable tabelaMethodID = new JTable(arrayToMatrix(alg.getMethods()), a);
+
 				painelMetodos.add(tabelaMethodID);
 				JScrollPane scroll = new JScrollPane(tabelaMethodID);
-				
-				
 
 				JPanel painelAux = new JPanel(new GridLayout(1, 2));
 				painelAux.add(scroll);
@@ -186,15 +183,12 @@ public class GUI {
 	}
 
 	private String[][] arrayToMatrix(ArrayList<Integer> aux) {
-		System.out.println("Entrou");
+		int l = 0;
 		String[][] aux1 = new String[aux.size()][1];
-		System.out.println("antes for"); 
+
 		for (Integer i : aux) {
-			
-		
-			System.out.println("Entou no for" + i.toString());
-			aux1[i][0] = aux.get(i).toString();
-			System.out.println(aux.get(i).toString());
+			aux1[l][0] = i.toString();
+			l++;
 		}
 		return aux1;
 	}

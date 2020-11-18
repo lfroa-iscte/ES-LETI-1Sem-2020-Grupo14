@@ -43,7 +43,7 @@ public class Algoritmo {
 		
 		if(ferramenta.equals("iPlasma"))
 			ferramentaN=0;
-		else if(ferramenta.equals("pmd"))
+		else if(ferramenta.equals("PMD"))
 				ferramentaN = 1;
 		
 		
