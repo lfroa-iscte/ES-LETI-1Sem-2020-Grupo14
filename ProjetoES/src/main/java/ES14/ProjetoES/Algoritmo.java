@@ -36,15 +36,22 @@ public class Algoritmo {
 
 	private Sheet sheet;
 
-	public Algoritmo(Sheet sheet, int ferramenta) {
+	public Algoritmo(Sheet sheet, String ferramenta) {
 		this.sheet = sheet;
 		methods=new ArrayList<>();
+		int ferramentaN=-1;
 		
-		retMethods(ferramenta);
-		checkDci(ferramenta);
-		checkDii(ferramenta);
-		checkAdci(ferramenta);
-		checkAdii(ferramenta);
+		if(ferramenta.equals("iPlasma"))
+			ferramentaN=0;
+		else if(ferramenta.equals("pmd"))
+				ferramentaN = 1;
+		
+		
+		retMethods(ferramentaN);
+		checkDci(ferramentaN);
+		checkDii(ferramentaN);
+		checkAdci(ferramentaN);
+		checkAdii(ferramentaN);
 	}
 	
 	private void retMethods(int ferramenta) {
@@ -190,7 +197,7 @@ public class Algoritmo {
 		try {
 			Workbook workbook = WorkbookFactory.create(new File(path));
 			Sheet sheet = workbook.getSheetAt(0);
-			Algoritmo alg=new Algoritmo(sheet, 0);
+			Algoritmo alg=new Algoritmo(sheet, "iPlasma");
 			
 			ArrayList<Integer> list=alg.getMethods();
 			
