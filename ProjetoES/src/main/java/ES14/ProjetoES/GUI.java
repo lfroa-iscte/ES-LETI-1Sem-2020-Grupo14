@@ -57,7 +57,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser chooser = new JFileChooser("C:\\Users\\fnpm\\OneDrive\\ISCTE\\3ºAno\\1º Semestre\\ES");
+				JFileChooser chooser = new JFileChooser(".");
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
 				int returnValue = chooser.showOpenDialog(null);
