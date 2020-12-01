@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.*;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,10 +15,14 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class Algoritmo {
 
+	private static int loc = 4;
+	private static int cycle = 5;
+	private static int atfd = 6;
+	private static int laa = 7;
 	private static int isLong = 8;
 	private static int iPlasma = 9;
 	private static int pmd = 10;
-	
+
 	private ArrayList<Integer> methods;
 	private HashMap<String, Integer> indicadores;
 
@@ -25,38 +30,92 @@ public class Algoritmo {
 
 	public Algoritmo(Sheet sheet, String ferramenta) {
 		this.sheet = sheet;
-		methods=new ArrayList<>();
-		indicadores=new HashMap<>();
-		int ferramentaN=-1;
-		
-		if(ferramenta.equals("iPlasma"))
-			ferramentaN=0;
-		else if(ferramenta.equals("PMD"))
-				ferramentaN = 1;
-		
-		
+		methods = new ArrayList<>();
+		indicadores = new HashMap<>();
+		int ferramentaN = -1;
+
+		if (ferramenta.equals("iPlasma"))
+			ferramentaN = 0;
+		else if (ferramenta.equals("PMD"))
+			ferramentaN = 1;
+
 		retMethods(ferramentaN);
 		checkDci(ferramentaN);
 		checkDii(ferramentaN);
 		checkAdci(ferramentaN);
 		checkAdii(ferramentaN);
 	}
-	
-	private void retMethods(int ferramenta) {
-		
+
+	public Algoritmo(Sheet sheet, List<Regra> regras) {
+		this.sheet = sheet;
+		methods = new ArrayList<>();
+		indicadores = new HashMap<>();
+		retMethodsRegra(regras);
+	}
+
+	private void retMethodsRegra(List<Regra> regras) {
+
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
 
 			if (row.getRowNum() != 0) {
-				if(ferramenta==0) {
+				checkForSmell(row, regras);
+
+			}
+		}
+	}
+
+	private void checkForSmell(Row row, List<Regra> regras) {
+		boolean smell = false;
+		for (Regra i : regras) {
+
+			int cell = metrica(i.getMetrica());
+			if (regras.indexOf(i) == 0 || regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR") || (smell == true && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
+				if (i.getOp().equals(">") && row.getCell(cell).getNumericCellValue() > i.getValor())
+					smell = true;
+
+				else if (i.getOp().equals(">=") && row.getCell(cell).getNumericCellValue() >= i.getValor())
+					smell = true;
+
+				else if (i.getOp().equals("<") && row.getCell(cell).getNumericCellValue() < i.getValor())
+					smell = true;
+
+				else
+					smell = false;
+			}
+		}
+		if (smell == true)
+			methods.add(row.getRowNum());
+	}
+
+	private int metrica(String metrica) {
+		if (metrica.equals("LOC"))
+			return loc;
+		if (metrica.equals("CYCLE"))
+			return cycle;
+		if (metrica.equals("ATFD"))
+			return atfd;
+
+		return laa;
+
+	}
+
+	private void retMethods(int ferramenta) {
+
+		Iterator<Row> rowIterator = sheet.iterator();
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+
+			if (row.getRowNum() != 0) {
+				if (ferramenta == 0) {
 					Boolean value = row.getCell(iPlasma).getBooleanCellValue();
-					if(value)
+					if (value)
 						methods.add(row.getRowNum());
 				}
-				if(ferramenta==1) {
+				if (ferramenta == 1) {
 					Boolean value = row.getCell(pmd).getBooleanCellValue();
-					if(value)
+					if (value)
 						methods.add(row.getRowNum());
 				}
 			}
@@ -64,7 +123,7 @@ public class Algoritmo {
 	}
 
 	private void checkDci(int ferramenta) {
-		int i=0;
+		int i = 0;
 		indicadores.put("DCI", 0);
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -74,19 +133,18 @@ public class Algoritmo {
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
-				
-				
-				if (ferramenta==0 && value == true && value1 == true)
+
+				if (ferramenta == 0 && value == true && value1 == true)
 					indicadores.put("DCI", i++);
 
-				if (ferramenta==1 && value == true && value2 == true)
+				if (ferramenta == 1 && value == true && value2 == true)
 					indicadores.put("DCI", i++);
 			}
 		}
 	}
 
 	private void checkDii(int ferramenta) {
-		int i=0;
+		int i = 0;
 		indicadores.put("DII", 0);
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -96,19 +154,18 @@ public class Algoritmo {
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
-				
-		
-				if (ferramenta==0 && value == false && value1 == true)
+
+				if (ferramenta == 0 && value == false && value1 == true)
 					indicadores.put("DII", i++);
 
-				if (ferramenta==1 && value == false && value2 == true)
+				if (ferramenta == 1 && value == false && value2 == true)
 					indicadores.put("DII", i++);
 			}
 		}
 	}
 
 	private void checkAdci(int ferramenta) {
-		int i=0;
+		int i = 0;
 		indicadores.put("ADCI", 0);
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -119,17 +176,17 @@ public class Algoritmo {
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
 
-				if (ferramenta==0 && value == false && value1 == false)
+				if (ferramenta == 0 && value == false && value1 == false)
 					indicadores.put("ADCI", i++);
 
-				if (ferramenta==1 && value == false && value2 == false)
+				if (ferramenta == 1 && value == false && value2 == false)
 					indicadores.put("ADCI", i++);
 			}
 		}
 	}
-	
+
 	private void checkAdii(int ferramenta) {
-		int i=0;
+		int i = 0;
 		indicadores.put("ADII", 0);
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -140,16 +197,16 @@ public class Algoritmo {
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
 
-				if (ferramenta==0 && value == true && value1 == false)
+				if (ferramenta == 0 && value == true && value1 == false)
 					indicadores.put("ADII", i++);
 
-				if (ferramenta==1 && value == true && value2 == false)
+				if (ferramenta == 1 && value == true && value2 == false)
 					indicadores.put("ADII", i++);
 			}
 		}
 	}
-	
-	public ArrayList<Integer> getMethods(){
+
+	public ArrayList<Integer> getMethods() {
 		return methods;
 	}
 
@@ -162,12 +219,23 @@ public class Algoritmo {
 		try {
 			Workbook workbook = WorkbookFactory.create(new File(path));
 			Sheet sheet = workbook.getSheetAt(0);
-			Algoritmo alg=new Algoritmo(sheet, "PMD");
-			
-			HashMap<String, Integer> temp= alg.getIndicadores();
-			for(String i: temp.keySet())
-		    	System.out.println(i+ "->" + temp.get(i));
-		    
+			List<Regra> regras = new ArrayList<>();
+			Regra um = new Regra("LOC", ">", 300, "AND");
+			Regra dois = new Regra("CYCLE", ">", 100, "OR");
+			Regra tres=new Regra("LOC", ">", 260, null);
+			regras.add(um);
+			regras.add(dois);
+			regras.add(tres);
+			Algoritmo alg = new Algoritmo(sheet, regras);
+
+			List<Integer> lista = alg.getMethods();
+			for (int i : lista) {
+				System.out.println(i);
+			}
+			// HashMap<String, Integer> temp = alg.getIndicadores();
+			// for (String i : temp.keySet())
+			// System.out.println(i + "->" + temp.get(i));
+
 		} catch (EncryptedDocumentException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
