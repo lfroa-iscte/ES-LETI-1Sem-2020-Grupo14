@@ -120,7 +120,7 @@ public class GUI {
 				painelResultados.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
 						"Indicadores de Qualidade", TitledBorder.CENTER, TitledBorder.TOP));
 				painelMetodos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-						"Métodos com Erros", TitledBorder.CENTER, TitledBorder.TOP));
+						"Métodos com Defeitos", TitledBorder.CENTER, TitledBorder.TOP));
 
 				painelMetodos.add(scroll);
 				painelResultados.add(scroll1);
