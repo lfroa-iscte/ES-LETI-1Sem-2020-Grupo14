@@ -27,6 +27,12 @@ public class GUI {
 	private File selectedFile;
 	private TableModel table;
 	private JPanel painelAux;
+	private Algoritmo alg;
+	private JFrame janelaRegras;
+	private String ferramentaSelecionada;
+	private JTextField treshold;
+	private JComboBox<String> metricas;
+	private JComboBox<String> operador;
 
 	/* verifica que não é a primeira vez a adicionar o painel dos metodos */
 	private boolean aux = false;
@@ -46,9 +52,9 @@ public class GUI {
 
 		JPanel botoes = new JPanel(new FlowLayout());
 
-		String[] flags = { "PMD", "iPlasma", "Regra a definir" };
+		String[] flags = { "PMD", "iPlasma", "Definir regra - LongMethod", "Definir regra - FeatureEnvy" };
 
-		final JComboBox flags2 = new JComboBox<String>(flags);
+		final JComboBox<String> flags2 = new JComboBox<String>(flags);
 
 		JButton importar = new JButton("Importar Excel");
 
@@ -57,7 +63,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser chooser = new JFileChooser(".");
+				JFileChooser chooser = new JFileChooser("C:\\Users\\fnpm\\OneDrive\\ISCTE\\3ºAno\\1º Semestre\\ES");
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
 				int returnValue = chooser.showOpenDialog(null);
@@ -103,9 +109,6 @@ public class GUI {
 
 				String[] header = { "MethodID" };
 				String[] headerIndicadores = { "Indicador", "Valor" };
-				String ferramentaSelecionada = (String) flags2.getSelectedItem(); // falta o caso de "regra a definir"
-
-				Algoritmo alg = new Algoritmo(sheet, ferramentaSelecionada);
 
 				painelAux = new JPanel(new GridLayout(1, 2));
 				JPanel painelMetodos = new JPanel(new FlowLayout()); // experimentar com gridLayout
@@ -136,9 +139,28 @@ public class GUI {
 
 		});
 
+		JButton confirmarRegra = new JButton("Confirmar Regra");
+
+		confirmarRegra.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ferramentaSelecionada = (String) flags2.getSelectedItem();
+				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
+					alg = new Algoritmo(sheet, ferramentaSelecionada);
+				} else {
+
+					setPopUp(ferramentaSelecionada);
+
+					// alg = new Algoritmo(sheet, ferramentaSelecionada, NOVO CAMPO);
+				}
+			}
+		});
+
 		janela.setLayout(new BorderLayout());
 
 		botoes.add(flags2);
+		botoes.add(confirmarRegra);
 		botoes.add(detetar);
 		botoes.add(importar);
 
@@ -200,4 +222,91 @@ public class GUI {
 		}
 		return aux1;
 	}
+
+	// Definicao de Regras
+	private void setPopUp(String aux) {
+
+		janelaRegras = new JFrame(aux);
+		janelaRegras.pack();
+		janelaRegras.setSize(800, 600);
+		janelaRegras.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		JButton addTreshold = new JButton("+");
+
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		final JPanel secondPanel = new JPanel(new BorderLayout());
+		GridBagLayout layout = new GridBagLayout();
+		JPanel tresholds = new JPanel(layout);
+
+		JPanel buttonPanel = new JPanel(new BorderLayout());
+
+		String[] longMethod = { "LOC", "CYCLO" };
+		String[] featureEnvy = { "ATFD", "LAA" };
+		String[] operadores = { "<", ">" };
+
+		metricas = new JComboBox<String>();
+		operador = new JComboBox<String>(operadores);
+
+		if (aux.equals("Definir regra - LongMethod")) {
+			for (String string : longMethod) {
+				metricas.addItem(string);
+			}
+		} else if (aux.equals("Definir regra - FeatureEnvy")) {
+			for (String string : featureEnvy) {
+				metricas.addItem(string);
+			}
+		}
+
+		treshold = new JTextField();
+
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		gbc.ipadx = 30;
+		gbc.ipady = 5;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		tresholds.add(metricas, gbc);
+
+		gbc.ipadx = 30;
+		gbc.ipady = 5;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		tresholds.add(operador, gbc);
+
+		gbc.ipadx = 50;
+		gbc.ipady = 10;
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		tresholds.add(treshold, gbc);
+
+		addTreshold.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				System.out.println(treshold.getSelectedText());
+
+				JTextField regras = new JTextField(metricas.getSelectedItem().toString() + " "
+						+ operador.getSelectedItem().toString() + "  " + treshold.getSelectedText());
+				secondPanel.add(regras, BorderLayout.CENTER);
+				janelaRegras.setVisible(true);
+
+			}
+		});
+
+		tresholds.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+				"Definição de Tresholds", TitledBorder.CENTER, TitledBorder.TOP));
+
+		buttonPanel.add(addTreshold, BorderLayout.WEST);
+
+		secondPanel.add(tresholds, BorderLayout.WEST);
+		secondPanel.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
+
+		mainPanel.add(secondPanel, BorderLayout.NORTH);
+		janelaRegras.add(mainPanel);
+
+		janelaRegras.setVisible(true);
+
+	}
+
 }
