@@ -280,15 +280,18 @@ public class GUI {
 		tresholds.add(treshold, gbc);
 
 		addTreshold.addActionListener(new ActionListener() {
+			JTextArea regras = new JTextArea();
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				regras.setEditable(false);
+				regras.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+						"Tresholds Definidas", TitledBorder.CENTER, TitledBorder.TOP));
 
-				System.out.println(treshold.getSelectedText());
-
-				JTextField regras = new JTextField(metricas.getSelectedItem().toString() + " "
-						+ operador.getSelectedItem().toString() + "  " + treshold.getSelectedText());
+				regras.setText(regras.getText() + metricas.getSelectedItem().toString() + " "
+						+ operador.getSelectedItem().toString() + " " + treshold.getText() + "\n");
 				secondPanel.add(regras, BorderLayout.CENTER);
+
 				janelaRegras.setVisible(true);
 
 			}
