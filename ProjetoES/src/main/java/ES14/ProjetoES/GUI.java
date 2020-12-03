@@ -37,6 +37,7 @@ public class GUI {
 	private JPanel secondPanel;
 	private JPanel thirdPanel;
 	private JPanel mainPanel;
+	private List listaRegras;
 
 	/* verifica que não é a primeira vez a adicionar o painel dos metodos */
 	private boolean aux = false;
@@ -107,11 +108,13 @@ public class GUI {
 				if (aux) {
 					ferramentas.remove(painelAux);
 				}
-
-				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) { // apagar
-					alg = new Algoritmo(sheet, ferramentaSelecionada);
+				
+				alg = new Algoritmo(sheet);
+				
+				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) { 
+					alg.runAlgoritmo(ferramentaSelecionada, null);
 				} else {
-//					alg = new Algoritmo(sheet, ferramenta, Novo Campo);
+				alg.runAlgoritmo(ferramentaSelecionada,
 				}
 
 				String[] header = { "MethodID" };
@@ -388,7 +391,6 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				
 				mainPanel.add(thirdPanel);
 			}
 		});
