@@ -28,11 +28,15 @@ public class GUI {
 	private TableModel table;
 	private JPanel painelAux;
 	private Algoritmo alg;
-	private JFrame janelaRegras;
+	private JDialog janelaRegras;
 	private String ferramentaSelecionada;
 	private JTextField treshold;
 	private JComboBox<String> metricas;
 	private JComboBox<String> operador;
+	private JTextArea regras;
+	private JPanel secondPanel;
+	private JPanel thirdPanel;
+	private JPanel mainPanel;
 
 	/* verifica que não é a primeira vez a adicionar o painel dos metodos */
 	private boolean aux = false;
@@ -42,21 +46,18 @@ public class GUI {
 		janela.pack();
 		janela.setSize(1200, 900);
 		janela.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		janela.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		addFrameContent();
 
 	}
 
 	private void addFrameContent() {
 
-		final JPanel ferramentas = new JPanel(new BorderLayout()); // alterar
+		final JPanel ferramentas = new JPanel(new BorderLayout());
 
 		JPanel botoes = new JPanel(new FlowLayout());
 
-		String[] flags = { "PMD", "iPlasma", "Definir regra - LongMethod", "Definir regra - FeatureEnvy" };
-
-		final JComboBox<String> flags2 = new JComboBox<String>(flags);
-
-		JButton importar = new JButton("Importar Excel");
+		JButton importar = new JButton("Importar");
 
 		importar.addActionListener(new ActionListener() {
 
@@ -107,11 +108,17 @@ public class GUI {
 					ferramentas.remove(painelAux);
 				}
 
+				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) { // apagar
+					alg = new Algoritmo(sheet, ferramentaSelecionada);
+				} else {
+//					alg = new Algoritmo(sheet, ferramenta, Novo Campo);
+				}
+
 				String[] header = { "MethodID" };
 				String[] headerIndicadores = { "Indicador", "Valor" };
 
 				painelAux = new JPanel(new GridLayout(1, 2));
-				JPanel painelMetodos = new JPanel(new FlowLayout()); // experimentar com gridLayout
+				JPanel painelMetodos = new JPanel(new FlowLayout());
 				JPanel painelResultados = new JPanel(new FlowLayout());
 
 				JTable tabelaMethodID = new JTable(arrayToMatrix(alg.getMethods()), header);
@@ -139,28 +146,89 @@ public class GUI {
 
 		});
 
-		JButton confirmarRegra = new JButton("Confirmar Regra");
+		JButton escolherRegra = new JButton("Escolher Regra");
 
-		confirmarRegra.addActionListener(new ActionListener() {
+		escolherRegra.addActionListener(new ActionListener() {
+			JDialog ruleDialog = new JDialog(janela, "Escolher Regra");
+			ButtonGroup g1 = new ButtonGroup();
+			JRadioButton pmd = new JRadioButton("PMD");
+			JRadioButton iPlasma = new JRadioButton("iPlasma");
+			JRadioButton longMethod = new JRadioButton("Definir regra - LongMethod");
+			JRadioButton featureEnvy = new JRadioButton("Definir regra - FeatureEnvy");
+			JButton confirmarRegra = new JButton("OK");
+			JPanel aux_confirmar = new JPanel(new FlowLayout());
+			JLabel erro = new JLabel();
+			JDialog erroDialog = new JDialog();
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ferramentaSelecionada = (String) flags2.getSelectedItem();
-				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
-					alg = new Algoritmo(sheet, ferramentaSelecionada);
-				} else {
 
-					setPopUp(ferramentaSelecionada);
+				ruleDialog.pack();
+				ruleDialog.setSize(200, 350);
+				ruleDialog.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
+				ruleDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+				ruleDialog.setLayout(new GridLayout(5, 1));
 
-					// alg = new Algoritmo(sheet, ferramentaSelecionada, NOVO CAMPO);
-				}
+				aux_confirmar.add(confirmarRegra);
+
+				g1.add(pmd);
+				g1.add(iPlasma);
+				g1.add(longMethod);
+				g1.add(featureEnvy);
+
+				ruleDialog.add(pmd);
+				ruleDialog.add(iPlasma);
+				ruleDialog.add(longMethod);
+				ruleDialog.add(featureEnvy);
+				ruleDialog.add(aux_confirmar);
+
+				ruleDialog.setVisible(true);
+
+				erroDialog.add(erro);
+				erroDialog.setSize(250, 150);
+				erroDialog.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
+
+				confirmarRegra.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (pmd.isSelected()) {
+							// alg = new Algoritmo(sheet, pmd.getText());
+							ferramentaSelecionada = pmd.getText();
+							ruleDialog.dispose();
+						} else if (iPlasma.isSelected()) {
+							// alg = new Algoritmo(sheet, iPlasma.getText());
+							ferramentaSelecionada = iPlasma.getText();
+							ruleDialog.dispose();
+						} else if (longMethod.isSelected()) {
+							setPopUp(longMethod.getText());
+							ruleDialog.dispose();
+						} else if (featureEnvy.isSelected()) {
+							setPopUp(featureEnvy.getText());
+							ruleDialog.dispose();
+						} else {
+							erro.setText("  Erro: Nenhuma Regra Selecionada!!!");
+							erroDialog.setVisible(true);
+						}
+
+					}
+				});
+
+//				ferramentaSelecionada = (String) flags2.getSelectedItem();
+//				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
+//					alg = new Algoritmo(sheet, ferramentaSelecionada);
+//				} else {
+//
+//					setPopUp(ferramentaSelecionada);
+//
+//					// alg = new Algoritmo(sheet, ferramentaSelecionada, NOVO CAMPO);
+//				}
 			}
 		});
 
 		janela.setLayout(new BorderLayout());
 
-		botoes.add(flags2);
-		botoes.add(confirmarRegra);
+		botoes.add(escolherRegra);
 		botoes.add(detetar);
 		botoes.add(importar);
 
@@ -226,19 +294,25 @@ public class GUI {
 	// Definicao de Regras
 	private void setPopUp(String aux) {
 
-		janelaRegras = new JFrame(aux);
+		regras = new JTextArea();
+
+		janelaRegras = new JDialog(janela, aux);
 		janelaRegras.pack();
 		janelaRegras.setSize(800, 600);
-		janelaRegras.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		janelaRegras.setLocation(janela.getWidth() / 2 - 400, janela.getHeight() / 2 - 300);
+		janelaRegras.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		JButton addTreshold = new JButton("+");
+		JButton reset = new JButton("Reset");
+		JButton confirmar_tresholds = new JButton("Confirmar");
 
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		final JPanel secondPanel = new JPanel(new BorderLayout());
+		mainPanel = new JPanel(new BorderLayout());
+		secondPanel = new JPanel(new BorderLayout());
 		GridBagLayout layout = new GridBagLayout();
 		JPanel tresholds = new JPanel(layout);
 
 		JPanel buttonPanel = new JPanel(new BorderLayout());
+		JPanel button_aux = new JPanel(new FlowLayout());
 
 		String[] longMethod = { "LOC", "CYCLO" };
 		String[] featureEnvy = { "ATFD", "LAA" };
@@ -246,6 +320,8 @@ public class GUI {
 
 		metricas = new JComboBox<String>();
 		operador = new JComboBox<String>(operadores);
+
+		thirdPanel = new JPanel(new FlowLayout());
 
 		if (aux.equals("Definir regra - LongMethod")) {
 			for (String string : longMethod) {
@@ -280,10 +356,10 @@ public class GUI {
 		tresholds.add(treshold, gbc);
 
 		addTreshold.addActionListener(new ActionListener() {
-			JTextArea regras = new JTextArea();
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				regras.setVisible(true);
 				regras.setEditable(false);
 				regras.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
 						"Tresholds Definidas", TitledBorder.CENTER, TitledBorder.TOP));
@@ -297,11 +373,33 @@ public class GUI {
 			}
 		});
 
+		reset.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				regras.setText(null);
+				regras.setVisible(false);
+				// faltam cenas
+			}
+		});
+
+		confirmar_tresholds.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				
+				mainPanel.add(thirdPanel);
+			}
+		});
+
 		tresholds.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
 				"Definição de Tresholds", TitledBorder.CENTER, TitledBorder.TOP));
 
-		buttonPanel.add(addTreshold, BorderLayout.WEST);
-
+		button_aux.add(addTreshold);
+		button_aux.add(reset);
+		button_aux.add(confirmar_tresholds);
+		buttonPanel.add(button_aux, BorderLayout.WEST);
 		secondPanel.add(tresholds, BorderLayout.WEST);
 		secondPanel.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
 
