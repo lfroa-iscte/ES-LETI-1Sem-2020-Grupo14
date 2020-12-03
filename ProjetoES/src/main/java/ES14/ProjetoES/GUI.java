@@ -197,6 +197,7 @@ public class GUI {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
+
 						if (pmd.isSelected()) {
 							ferramentaSelecionada = pmd.getText();
 							ruleDialog.dispose();
@@ -211,10 +212,12 @@ public class GUI {
 							ferramentaSelecionada = featureEnvy.getText();
 							setPopUp(featureEnvy.getText());
 							ruleDialog.dispose();
-						} else {
-							erro.setText("  Erro: Nenhuma Regra Selecionada!!!");
-							erroDialog.setVisible(true);
-						}
+						} 
+//						else if(g1.) {
+//							erro.setText("  Erro: Nenhuma Regra Selecionada!!!");
+//							erroDialog.setVisible(true);
+//						}
+						g1.clearSelection();
 
 					}
 				});
