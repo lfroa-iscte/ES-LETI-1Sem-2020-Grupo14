@@ -28,10 +28,13 @@ public class Algoritmo {
 
 	private Sheet sheet;
 
-	public Algoritmo(Sheet sheet, String ferramenta) {
+	public Algoritmo(Sheet sheet) {
 		this.sheet = sheet;
 		methods = new ArrayList<>();
 		indicadores = new HashMap<>();
+	}
+
+	public void runAlgoritmo(String ferramenta, List<Regra> regras) {
 		int ferramentaN = -1;
 
 		if (ferramenta.equals("iPlasma"))
@@ -39,21 +42,44 @@ public class Algoritmo {
 		else if (ferramenta.equals("PMD"))
 			ferramentaN = 1;
 
-		retMethods(ferramentaN);
-		checkDci(ferramentaN);
-		checkDii(ferramentaN);
-		checkAdci(ferramentaN);
-		checkAdii(ferramentaN);
+		if (ferramentaN != -1) {
+			retMetodos(ferramentaN);
+			checkDci(ferramentaN);
+			checkDii(ferramentaN);
+			checkAdci(ferramentaN);
+			checkAdii(ferramentaN);
+		} else {
+			retMetodosRegra(regras);
+			checkIndicadoresRegra();
+		}
 	}
 
-	public Algoritmo(Sheet sheet, List<Regra> regras) {
-		this.sheet = sheet;
-		methods = new ArrayList<>();
-		indicadores = new HashMap<>();
-		retMethodsRegra(regras);
+	
+
+	private void checkIndicadoresRegra() {
+		int i=0;
+	
+		Iterator<Row> rowIterator = sheet.iterator();
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+
+			if (row.getRowNum() != 0) {
+				Boolean value = row.getCell(isLong).getBooleanCellValue();
+				
+				if (value==true && methods.contains(row.getRowNum())) 
+					indicadores.put("DCI", i++);
+				else if(value==false && methods.contains(row.getRowNum()))
+						indicadores.put("DII", i++);
+				else if(value==false && !methods.contains(row.getRowNum()))
+						indicadores.put("ADCI", i++);
+				else if(value==true && !methods.contains(row.getRowNum()))
+						indicadores.put("ADII", i++);
+					
+			}
+		}
 	}
 
-	private void retMethodsRegra(List<Regra> regras) {
+	private void retMetodosRegra(List<Regra> regras) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -71,7 +97,8 @@ public class Algoritmo {
 		for (Regra i : regras) {
 
 			int cell = metrica(i.getMetrica());
-			if (regras.indexOf(i) == 0 || regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR") || (smell == true && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
+			if (regras.indexOf(i) == 0 || regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR")
+					|| (smell == true && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
 				if (i.getOp().equals(">") && row.getCell(cell).getNumericCellValue() > i.getValor())
 					smell = true;
 
@@ -101,7 +128,7 @@ public class Algoritmo {
 
 	}
 
-	private void retMethods(int ferramenta) {
+	private void retMetodos(int ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -121,6 +148,21 @@ public class Algoritmo {
 			}
 		}
 	}
+	
+	/*private void checkIndicadoresFerramenta(int ferramenta) {
+		int i=0;
+		
+		Iterator<Row> rowIterator = sheet.iterator();
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+
+			if (row.getRowNum() != 0) {
+				Boolean value = row.getCell(isLong).getBooleanCellValue();
+				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
+				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
+			}
+		}
+	}*/
 
 	private void checkDci(int ferramenta) {
 		int i = 0;
@@ -222,11 +264,11 @@ public class Algoritmo {
 			List<Regra> regras = new ArrayList<>();
 			Regra um = new Regra("LOC", ">", 300, "AND");
 			Regra dois = new Regra("CYCLE", ">", 100, "OR");
-			Regra tres=new Regra("LOC", ">", 260, null);
+			Regra tres = new Regra("LOC", ">", 260, null);
 			regras.add(um);
 			regras.add(dois);
 			regras.add(tres);
-			Algoritmo alg = new Algoritmo(sheet, regras);
+			Algoritmo alg = new Algoritmo(sheet);
 
 			List<Integer> lista = alg.getMethods();
 			for (int i : lista) {
