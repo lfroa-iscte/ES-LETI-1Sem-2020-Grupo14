@@ -6,12 +6,16 @@ public class Regra {
 	String op;
 	int valor;
 	String opLogico;
-	
+
 	public Regra(String metrica, String op, int valor, String opLogico) {
-		this.metrica=metrica;
-		this.op=op;
-		this.valor=valor;
-		this.opLogico=opLogico;
+		this.metrica = metrica;
+		this.op = op;
+		this.valor = valor;
+		this.opLogico = opLogico;
+	}
+
+	public void setOpLogico(String opLogico) {
+		this.opLogico = opLogico;
 	}
 
 	public String getMetrica() {
@@ -29,6 +33,9 @@ public class Regra {
 	public String getOpLogico() {
 		return opLogico;
 	}
-	
-	
+
+	public boolean checkRule(String s) {
+		return s.equals(metrica + op + valor);
+	}
+
 }

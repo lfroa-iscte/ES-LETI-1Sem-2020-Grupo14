@@ -15,6 +15,7 @@ import javax.swing.table.TableModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.ListAutoNumber;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -37,7 +38,8 @@ public class GUI {
 	private JPanel secondPanel;
 	private JPanel thirdPanel;
 	private JPanel mainPanel;
-	private List listaRegras;
+	private ArrayList<Regra> listaRegras;
+	private ArrayList<JComboBox<String>> combos;
 
 	/* verifica que não é a primeira vez a adicionar o painel dos metodos */
 	private boolean aux = false;
@@ -108,13 +110,13 @@ public class GUI {
 				if (aux) {
 					ferramentas.remove(painelAux);
 				}
-				
+
 				alg = new Algoritmo(sheet);
-				
-				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) { 
+
+				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
 					alg.runAlgoritmo(ferramentaSelecionada, null);
 				} else {
-				alg.runAlgoritmo(ferramentaSelecionada,
+					alg.runAlgoritmo(ferramentaSelecionada, listaRegras);
 				}
 
 				String[] header = { "MethodID" };
@@ -196,17 +198,17 @@ public class GUI {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if (pmd.isSelected()) {
-							// alg = new Algoritmo(sheet, pmd.getText());
 							ferramentaSelecionada = pmd.getText();
 							ruleDialog.dispose();
 						} else if (iPlasma.isSelected()) {
-							// alg = new Algoritmo(sheet, iPlasma.getText());
 							ferramentaSelecionada = iPlasma.getText();
 							ruleDialog.dispose();
 						} else if (longMethod.isSelected()) {
+							ferramentaSelecionada = longMethod.getText();
 							setPopUp(longMethod.getText());
 							ruleDialog.dispose();
 						} else if (featureEnvy.isSelected()) {
+							ferramentaSelecionada = featureEnvy.getText();
 							setPopUp(featureEnvy.getText());
 							ruleDialog.dispose();
 						} else {
@@ -216,16 +218,6 @@ public class GUI {
 
 					}
 				});
-
-//				ferramentaSelecionada = (String) flags2.getSelectedItem();
-//				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
-//					alg = new Algoritmo(sheet, ferramentaSelecionada);
-//				} else {
-//
-//					setPopUp(ferramentaSelecionada);
-//
-//					// alg = new Algoritmo(sheet, ferramentaSelecionada, NOVO CAMPO);
-//				}
 			}
 		});
 
@@ -296,8 +288,9 @@ public class GUI {
 
 	// Definicao de Regras
 	private void setPopUp(String aux) {
-
+		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();
+		combos = new ArrayList<JComboBox<String>>();
 
 		janelaRegras = new JDialog(janela, aux);
 		janelaRegras.pack();
@@ -308,18 +301,19 @@ public class GUI {
 		JButton addTreshold = new JButton("+");
 		JButton reset = new JButton("Reset");
 		JButton confirmar_tresholds = new JButton("Confirmar");
+		JButton checkR = new JButton("OK");
 
 		mainPanel = new JPanel(new BorderLayout());
 		secondPanel = new JPanel(new BorderLayout());
 		GridBagLayout layout = new GridBagLayout();
 		JPanel tresholds = new JPanel(layout);
-
+		JPanel checkRule = new JPanel(new FlowLayout());
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 		JPanel button_aux = new JPanel(new FlowLayout());
 
 		String[] longMethod = { "LOC", "CYCLO" };
 		String[] featureEnvy = { "ATFD", "LAA" };
-		String[] operadores = { "<", ">" };
+		String[] operadores = { "<", ">", "<=", ">=" };
 
 		metricas = new JComboBox<String>();
 		operador = new JComboBox<String>(operadores);
@@ -371,6 +365,9 @@ public class GUI {
 						+ operador.getSelectedItem().toString() + " " + treshold.getText() + "\n");
 				secondPanel.add(regras, BorderLayout.CENTER);
 
+				listaRegras.add(new Regra(metricas.getSelectedItem().toString(), operador.getSelectedItem().toString(),
+						Integer.parseInt(treshold.getText()), null));
+
 				janelaRegras.setVisible(true);
 
 			}
@@ -382,7 +379,8 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				regras.setText(null);
 				regras.setVisible(false);
-				// faltam cenas
+				listaRegras.clear();
+				thirdPanel.removeAll();
 			}
 		});
 
@@ -391,7 +389,58 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				mainPanel.add(thirdPanel);
+				thirdPanel.removeAll();
+
+				int l = listaRegras.size() * 2 - 1;
+				String[] temp = new String[listaRegras.size()];
+				String[] opLogico = { "OR", "AND" };
+				int i = 0;
+				for (Regra r : listaRegras) {
+					temp[i] = r.getMetrica() + r.getOp() + r.getValor();
+					i++;
+				}
+
+				JComboBox<String> combo = new JComboBox<String>(temp);
+				JComboBox<String> comboOperadores = new JComboBox<String>(opLogico);
+				for (int t = 0; t < l; t++) {
+					if (t % 2 == 0) {
+						combos.add(combo);
+						thirdPanel.add(new JComboBox<String>(temp));
+					} else {
+						combos.add(comboOperadores);
+						thirdPanel.add(new JComboBox<String>(opLogico));
+					}
+				}
+
+				thirdPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+						"Regra Definida", TitledBorder.CENTER, TitledBorder.TOP));
+				mainPanel.add(thirdPanel, BorderLayout.CENTER);
+				janelaRegras.setVisible(true);
+			}
+		});
+
+		checkR.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<Regra> aux = new ArrayList<Regra>();
+
+				for (int i = 0; i < combos.size(); i += 2) {
+					for (Regra r : listaRegras) {
+						if (i != combos.size() - 1) {
+							if (r.checkRule(combos.get(i).getSelectedItem().toString())) {
+								r.setOpLogico(combos.get(i + 1).getSelectedItem().toString());
+								aux.add(r);
+							}
+						} else {
+							aux.add(r);
+						}
+					}
+				}
+
+				listaRegras = aux;
+				janelaRegras.dispose();
+
 			}
 		});
 
@@ -405,6 +454,8 @@ public class GUI {
 		secondPanel.add(tresholds, BorderLayout.WEST);
 		secondPanel.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
 
+		checkRule.add(checkR);
+		mainPanel.add(checkRule, BorderLayout.SOUTH);
 		mainPanel.add(secondPanel, BorderLayout.NORTH);
 		janelaRegras.add(mainPanel);
 
