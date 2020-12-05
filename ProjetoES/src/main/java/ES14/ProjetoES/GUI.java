@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -263,7 +263,7 @@ public class GUI {
 		return aux1;
 	}
 
-	private String[][] mapToMatrix(HashMap<String, Integer> aux) {
+	private String[][] mapToMatrix(Map<String, Integer> aux) {
 
 		int c = 0;
 		int l = 0;
@@ -285,9 +285,11 @@ public class GUI {
 		janelaExcel.pack();
 		janelaExcel.setSize(1200, 900);
 		janelaExcel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		janelaExcel.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		JTable tabela = new JTable(data, headers);
 		tabela.setEnabled(false);
+		
 		JScrollPane center = new JScrollPane(tabela);
 
 		janelaExcel.add(center);
@@ -300,7 +302,6 @@ public class GUI {
 		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();
 		combos = new ArrayList<JComboBox<String>>();
-		
 
 		janelaRegras = new JDialog(janela, aux);
 		janelaRegras.pack();
