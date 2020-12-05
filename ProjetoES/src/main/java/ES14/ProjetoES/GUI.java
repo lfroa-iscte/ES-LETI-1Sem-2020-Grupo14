@@ -9,8 +9,6 @@ import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -24,10 +22,6 @@ public class GUI {
 	private XSSFSheet sheet;
 	private String[] headers;
 	private String[][] data;
-	private File selectedFile;
-	private TableModel table;
-	private JPanel painelAux;
-	private Algoritmo alg;
 	private JDialog janelaRegras;
 	private String ferramentaSelecionada;
 	private JTextField threshold;
@@ -39,9 +33,6 @@ public class GUI {
 	private JPanel mainPanel;
 	private ArrayList<Regra> listaRegras;
 	private ArrayList<JComboBox<String>> combos;
-
-	/* verifica que não é a primeira vez a adicionar o painel dos metodos */
-	private boolean aux = false;
 
 	public GUI() {
 		janela = new JFrame("DetetorDefeitos3000");
@@ -63,10 +54,12 @@ public class GUI {
 
 		importar.addActionListener(new ActionListener() {
 
+			File selectedFile;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser chooser = new JFileChooser("C:\\Users\\fnpm\\OneDrive\\ISCTE\\3ºAno\\1º Semestre\\ES");
+				JFileChooser chooser = new JFileChooser(".");
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
 				int returnValue = chooser.showOpenDialog(null);
@@ -81,20 +74,7 @@ public class GUI {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-
-					// criar janela Excel
-					JFrame janelaExcel = new JFrame(selectedFile.getName());
-					janelaExcel.pack();
-					janelaExcel.setSize(1200, 900);
-					janelaExcel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-					table = new DefaultTableModel(data, headers);
-
-					JTable tabela = new JTable(table);
-					JScrollPane center = new JScrollPane(tabela);
-
-					janelaExcel.add(center);
-
-					janelaExcel.setVisible(true);
+					setExcel(selectedFile.getName());
 				}
 
 			}
@@ -104,48 +84,67 @@ public class GUI {
 
 		detetar.addActionListener(new ActionListener() {
 
+			/* verifica que não é a primeira vez a adicionar o painel dos metodos */
+			boolean aux = false;
+			Algoritmo alg;
+			JPanel painelAux;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (aux) {
-					ferramentas.remove(painelAux);
-				}
 
-				alg = new Algoritmo(sheet);
+				if (data == null) {
+					JLabel error_msg = new JLabel("  Ficheiro não importado!!");
+					JDialog error = new JDialog(janela);
+					error.add(error_msg);
+					error.setSize(200, 125);
+					error.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
+					error.setVisible(true);
 
-				if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
-					alg.runAlgoritmo(ferramentaSelecionada, null);
 				} else {
-					alg.runAlgoritmo(ferramentaSelecionada, listaRegras);
+
+					if (aux) {
+						ferramentas.remove(painelAux);
+					}
+
+					alg = new Algoritmo(sheet);
+
+					if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
+						alg.runAlgoritmo(ferramentaSelecionada, null);
+					} else {
+						alg.runAlgoritmo(ferramentaSelecionada, listaRegras);
+					}
+
+					String[] header = { "MethodID" };
+					String[] headerIndicadores = { "Indicador", "Valor" };
+
+					painelAux = new JPanel(new GridLayout(1, 2));
+					JPanel painelMetodos = new JPanel(new FlowLayout());
+					JPanel painelResultados = new JPanel(new FlowLayout());
+
+					JTable tabelaMethodID = new JTable(arrayToMatrix(alg.getMethods()), header);
+					JTable tabelaIndicadores = new JTable(mapToMatrix(alg.getIndicadores()), headerIndicadores);
+					tabelaIndicadores.setEnabled(false);
+					tabelaMethodID.setEnabled(false);
+
+					JScrollPane scroll = new JScrollPane(tabelaMethodID);
+					JScrollPane scroll1 = new JScrollPane(tabelaIndicadores);
+
+					painelResultados.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+							"Indicadores de Qualidade", TitledBorder.CENTER, TitledBorder.TOP));
+					painelMetodos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+							"Métodos com Defeitos", TitledBorder.CENTER, TitledBorder.TOP));
+
+					painelMetodos.add(scroll);
+					painelResultados.add(scroll1);
+
+					painelAux.add(painelMetodos);
+					painelAux.add(painelResultados);
+					ferramentas.add(painelAux, BorderLayout.CENTER);
+
+					janela.setVisible(true);
+
+					aux = true;
 				}
-
-				String[] header = { "MethodID" };
-				String[] headerIndicadores = { "Indicador", "Valor" };
-
-				painelAux = new JPanel(new GridLayout(1, 2));
-				JPanel painelMetodos = new JPanel(new FlowLayout());
-				JPanel painelResultados = new JPanel(new FlowLayout());
-
-				JTable tabelaMethodID = new JTable(arrayToMatrix(alg.getMethods()), header);
-				JTable tabelaIndicadores = new JTable(mapToMatrix(alg.getIndicadores()), headerIndicadores);
-
-				JScrollPane scroll = new JScrollPane(tabelaMethodID);
-				JScrollPane scroll1 = new JScrollPane(tabelaIndicadores);
-
-				painelResultados.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-						"Indicadores de Qualidade", TitledBorder.CENTER, TitledBorder.TOP));
-				painelMetodos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-						"Métodos com Defeitos", TitledBorder.CENTER, TitledBorder.TOP));
-
-				painelMetodos.add(scroll);
-				painelResultados.add(scroll1);
-
-				painelAux.add(painelMetodos);
-				painelAux.add(painelResultados);
-				ferramentas.add(painelAux, BorderLayout.CENTER);
-
-				janela.setVisible(true);
-
-				aux = true;
 			}
 
 		});
@@ -153,6 +152,7 @@ public class GUI {
 		JButton escolherRegra = new JButton("Escolher Regra");
 
 		escolherRegra.addActionListener(new ActionListener() {
+
 			JDialog ruleDialog = new JDialog(janela, "Escolher Regra");
 			ButtonGroup g1 = new ButtonGroup();
 			JRadioButton pmd = new JRadioButton("PMD");
@@ -161,8 +161,6 @@ public class GUI {
 			JRadioButton featureEnvy = new JRadioButton("Definir regra - FeatureEnvy");
 			JButton confirmarRegra = new JButton("OK");
 			JPanel aux_confirmar = new JPanel(new FlowLayout());
-			JLabel erro = new JLabel();
-			JDialog erroDialog = new JDialog();
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -187,10 +185,6 @@ public class GUI {
 				ruleDialog.add(aux_confirmar);
 
 				ruleDialog.setVisible(true);
-
-				erroDialog.add(erro);
-				erroDialog.setSize(250, 150);
-				erroDialog.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
 
 				confirmarRegra.addActionListener(new ActionListener() {
 
@@ -270,6 +264,7 @@ public class GUI {
 	}
 
 	private String[][] mapToMatrix(HashMap<String, Integer> aux) {
+
 		int c = 0;
 		int l = 0;
 		String[][] aux1 = new String[aux.size()][2];
@@ -284,11 +279,28 @@ public class GUI {
 		return aux1;
 	}
 
+	private void setExcel(String name) {
+
+		JFrame janelaExcel = new JFrame(name);
+		janelaExcel.pack();
+		janelaExcel.setSize(1200, 900);
+		janelaExcel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+		JTable tabela = new JTable(data, headers);
+		tabela.setEnabled(false);
+		JScrollPane center = new JScrollPane(tabela);
+
+		janelaExcel.add(center);
+
+		janelaExcel.setVisible(true);
+	}
+
 	// Definicao de Regras
 	private void setPopUp(String aux) {
 		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();
 		combos = new ArrayList<JComboBox<String>>();
+		
 
 		janelaRegras = new JDialog(janela, aux);
 		janelaRegras.pack();
@@ -311,7 +323,7 @@ public class GUI {
 
 		String[] longMethod = { "LOC", "CYCLO" };
 		String[] featureEnvy = { "ATFD", "LAA" };
-		String[] operadores = { "<", ">", "<=", ">=" };
+		String[] operadores = { ">", "<", ">=", "<=" };
 
 		metricas = new JComboBox<String>();
 		operador = new JComboBox<String>(operadores);
