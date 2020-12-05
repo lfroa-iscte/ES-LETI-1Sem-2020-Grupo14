@@ -33,7 +33,7 @@ public class GUI {
 	private Algoritmo alg;
 	private JDialog janelaRegras;
 	private String ferramentaSelecionada;
-	private JTextField treshold;
+	private JTextField threshold;
 	private JComboBox<String> metricas;
 	private JComboBox<String> operador;
 	private JTextArea regras;
@@ -299,15 +299,15 @@ public class GUI {
 		janelaRegras.setLocation(janela.getWidth() / 2 - 400, janela.getHeight() / 2 - 300);
 		janelaRegras.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		JButton addTreshold = new JButton("+");
+		JButton addThreshold = new JButton("+");
 		JButton reset = new JButton("Reset");
-		JButton confirmar_tresholds = new JButton("Confirmar");
+		JButton confirmar_thresholds = new JButton("Confirmar");
 		JButton checkR = new JButton("OK");
 
 		mainPanel = new JPanel(new BorderLayout());
 		secondPanel = new JPanel(new BorderLayout());
 		GridBagLayout layout = new GridBagLayout();
-		JPanel tresholds = new JPanel(layout);
+		JPanel thresholds = new JPanel(layout);
 		JPanel checkRule = new JPanel(new FlowLayout());
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 		JPanel button_aux = new JPanel(new FlowLayout());
@@ -331,7 +331,7 @@ public class GUI {
 			}
 		}
 
-		treshold = new JTextField();
+		threshold = new JTextField();
 
 		GridBagConstraints gbc = new GridBagConstraints();
 
@@ -339,35 +339,35 @@ public class GUI {
 		gbc.ipady = 5;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		tresholds.add(metricas, gbc);
+		thresholds.add(metricas, gbc);
 
 		gbc.ipadx = 30;
 		gbc.ipady = 5;
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		tresholds.add(operador, gbc);
+		thresholds.add(operador, gbc);
 
 		gbc.ipadx = 50;
 		gbc.ipady = 10;
 		gbc.gridx = 2;
 		gbc.gridy = 0;
-		tresholds.add(treshold, gbc);
+		thresholds.add(threshold, gbc);
 
-		addTreshold.addActionListener(new ActionListener() {
+		addThreshold.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				regras.setVisible(true);
 				regras.setEditable(false);
 				regras.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-						"Tresholds Definidas", TitledBorder.CENTER, TitledBorder.TOP));
+						"Thresholds Definidas", TitledBorder.CENTER, TitledBorder.TOP));
 
 				regras.setText(regras.getText() + metricas.getSelectedItem().toString() + " "
-						+ operador.getSelectedItem().toString() + " " + treshold.getText() + "\n");
+						+ operador.getSelectedItem().toString() + " " + threshold.getText() + "\n");
 				secondPanel.add(regras, BorderLayout.CENTER);
 
 				listaRegras.add(new Regra(metricas.getSelectedItem().toString(), operador.getSelectedItem().toString(),
-						Integer.parseInt(treshold.getText()), null));
+						Integer.parseInt(threshold.getText()), null));
 
 				janelaRegras.setVisible(true);
 
@@ -385,7 +385,7 @@ public class GUI {
 			}
 		});
 
-		confirmar_tresholds.addActionListener(new ActionListener() {
+		confirmar_thresholds.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -445,14 +445,14 @@ public class GUI {
 			}
 		});
 
-		tresholds.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-				"Definição de Tresholds", TitledBorder.CENTER, TitledBorder.TOP));
+		thresholds.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+				"Definição de Thresholds", TitledBorder.CENTER, TitledBorder.TOP));
 
-		button_aux.add(addTreshold);
+		button_aux.add(addThreshold);
 		button_aux.add(reset);
-		button_aux.add(confirmar_tresholds);
+		button_aux.add(confirmar_thresholds);
 		buttonPanel.add(button_aux, BorderLayout.WEST);
-		secondPanel.add(tresholds, BorderLayout.WEST);
+		secondPanel.add(thresholds, BorderLayout.WEST);
 		secondPanel.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
 
 		checkRule.add(checkR);
