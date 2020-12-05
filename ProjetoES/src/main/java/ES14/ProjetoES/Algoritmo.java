@@ -32,6 +32,10 @@ public class Algoritmo {
 		this.sheet = sheet;
 		methods = new ArrayList<>();
 		indicadores = new HashMap<>();
+		indicadores.put("DCI", 0);
+		indicadores.put("DII", 0);
+		indicadores.put("ADCI", 0);
+		indicadores.put("ADII", 0);
 	}
 
 	public void runAlgoritmo(String ferramenta, List<Regra> regras) {
@@ -57,7 +61,6 @@ public class Algoritmo {
 	
 
 	private void checkIndicadoresRegra() {
-		int i=0;
 	
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -67,13 +70,13 @@ public class Algoritmo {
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
 				
 				if (value==true && methods.contains(row.getRowNum())) 
-					indicadores.put("DCI", i++);
+					indicadores.put("DCI", indicadores.get("DCI")+1);
 				else if(value==false && methods.contains(row.getRowNum()))
-						indicadores.put("DII", i++);
+						indicadores.put("DII", indicadores.get("DII")+1);
 				else if(value==false && !methods.contains(row.getRowNum()))
-						indicadores.put("ADCI", i++);
+						indicadores.put("ADCI",indicadores.get("ADCI")+1);
 				else if(value==true && !methods.contains(row.getRowNum()))
-						indicadores.put("ADII", i++);
+						indicadores.put("ADII", indicadores.get("ADII")+1);
 					
 			}
 		}
@@ -160,6 +163,7 @@ public class Algoritmo {
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
 				Boolean value1 = row.getCell(iPlasma).getBooleanCellValue();
 				Boolean value2 = row.getCell(pmd).getBooleanCellValue();
+				if
 			}
 		}
 	}*/
@@ -263,20 +267,23 @@ public class Algoritmo {
 			Sheet sheet = workbook.getSheetAt(0);
 			List<Regra> regras = new ArrayList<>();
 			Regra um = new Regra("LOC", ">", 300, "AND");
-			Regra dois = new Regra("CYCLE", ">", 100, "OR");
-			Regra tres = new Regra("LOC", ">", 260, null);
+			Regra dois = new Regra("CYCLE", ">", 100, null);
+			//Regra tres = new Regra("LOC", ">", 260, null);
 			regras.add(um);
 			regras.add(dois);
-			regras.add(tres);
+			//regras.add(tres);
 			Algoritmo alg = new Algoritmo(sheet);
+			
+			alg.runAlgoritmo("REGRA", regras);
 
 			List<Integer> lista = alg.getMethods();
 			for (int i : lista) {
 				System.out.println(i);
 			}
-			// HashMap<String, Integer> temp = alg.getIndicadores();
-			// for (String i : temp.keySet())
-			// System.out.println(i + "->" + temp.get(i));
+			
+			 /*HashMap<String, Integer> temp = alg.getIndicadores();
+			 for (String i : temp.keySet())
+			 System.out.println(i + "->" + temp.get(i));*/
 
 		} catch (EncryptedDocumentException e) {
 			e.printStackTrace();
