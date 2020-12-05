@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class Algoritmo {
 
 	private static int loc = 4;
-	private static int cycle = 5;
+	private static int cyclo = 5;
 	private static int atfd = 6;
 	private static int laa = 7;
 	private static int isLong = 8;
@@ -122,8 +122,8 @@ public class Algoritmo {
 	private int metrica(String metrica) {
 		if (metrica.equals("LOC"))
 			return loc;
-		if (metrica.equals("CYCLE"))
-			return cycle;
+		if (metrica.equals("CYCLO"))
+			return cyclo;
 		if (metrica.equals("ATFD"))
 			return atfd;
 

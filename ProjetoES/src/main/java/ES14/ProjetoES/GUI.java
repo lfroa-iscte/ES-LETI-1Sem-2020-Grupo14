@@ -207,11 +207,11 @@ public class GUI {
 							ferramentaSelecionada = iPlasma.getText();
 							ruleDialog.dispose();
 						} else if (longMethod.isSelected()) {
-							ferramentaSelecionada = longMethod.getText();
+							ferramentaSelecionada = "LongMethod";
 							setPopUp(longMethod.getText());
 							ruleDialog.dispose();
 						} else if (featureEnvy.isSelected()) {
-							ferramentaSelecionada = featureEnvy.getText();
+							ferramentaSelecionada = "FeatureEnvy";
 							setPopUp(featureEnvy.getText());
 							ruleDialog.dispose();
 						}
