@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -269,7 +270,7 @@ public class GUI {
 		return aux1;
 	}
 
-	private String[][] mapToMatrix(HashMap<String, Integer> aux) {
+	private String[][] mapToMatrix(Map<String, Integer> aux) {
 		int c = 0;
 		int l = 0;
 		String[][] aux1 = new String[aux.size()][2];
