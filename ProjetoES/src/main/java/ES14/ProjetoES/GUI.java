@@ -3,12 +3,14 @@ package ES14.ProjetoES;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -171,7 +173,7 @@ public class GUI {
 				ruleDialog.pack();
 				ruleDialog.setSize(200, 350);
 				ruleDialog.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
-				ruleDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+				ruleDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				ruleDialog.setLayout(new GridLayout(5, 1));
 
 				aux_confirmar.add(confirmarRegra);
@@ -212,11 +214,7 @@ public class GUI {
 							ferramentaSelecionada = featureEnvy.getText();
 							setPopUp(featureEnvy.getText());
 							ruleDialog.dispose();
-						} 
-//						else if(g1.) {
-//							erro.setText("  Erro: Nenhuma Regra Selecionada!!!");
-//							erroDialog.setVisible(true);
-//						}
+						}
 						g1.clearSelection();
 
 					}
