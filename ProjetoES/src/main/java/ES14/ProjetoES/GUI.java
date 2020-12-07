@@ -289,7 +289,7 @@ public class GUI {
 
 		JTable tabela = new JTable(data, headers);
 		tabela.setEnabled(false);
-		
+
 		JScrollPane center = new JScrollPane(tabela);
 
 		janelaExcel.add(center);
@@ -427,6 +427,7 @@ public class GUI {
 						"Regra Definida", TitledBorder.CENTER, TitledBorder.TOP));
 				mainPanel.add(thirdPanel, BorderLayout.CENTER);
 				janelaRegras.setVisible(true);
+
 			}
 		});
 
@@ -442,16 +443,21 @@ public class GUI {
 							if (r.checkRule(combos.get(i).getSelectedItem().toString())) {
 								r.setOpLogico(combos.get(i + 1).getSelectedItem().toString());
 								aux.add(r);
+								break;
 							}
 						} else {
 							aux.add(r);
+							break;
+
 						}
 					}
 				}
 
 				listaRegras = aux;
 				janelaRegras.dispose();
-
+				for (JComboBox<String> r : combos) {
+					System.out.println(r.getSelectedItem().toString());
+				}
 			}
 		});
 
