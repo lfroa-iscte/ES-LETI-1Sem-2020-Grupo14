@@ -95,7 +95,7 @@ public class Algoritmo {
 		for (Regra i : regras) {
 
 			int cell = metrica(i.getMetrica());
-			if (regras.indexOf(i) == 0 || regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR")
+			if (regras.indexOf(i) == 0 || (!smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR"))
 					|| (smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
 				if (i.getOp().equals(">") && row.getCell(cell).getNumericCellValue() > i.getValor())
 					smell = true;
@@ -105,7 +105,10 @@ public class Algoritmo {
 
 				else if (i.getOp().equals("<") && row.getCell(cell).getNumericCellValue() < i.getValor())
 					smell = true;
-
+				
+				else if(i.getOp().equals("<=") && row.getCell(cell).getNumericCellValue() <= i.getValor())
+					smell=true;
+				
 				else
 					smell = false;
 			}
@@ -182,4 +185,38 @@ public class Algoritmo {
 		return indicadores;
 	}
 
+	public static void main(String[] args) {
+		String path = new String("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx");
+		try {
+			Workbook workbook = WorkbookFactory.create(new File(path));
+			Sheet sheet = workbook.getSheetAt(0);
+			List<Regra> regras = new ArrayList<>();
+			Regra dois = new Regra("LOC", ">=", 18, "OR");
+			Regra um = new Regra("CYCLO", ">=", 3, null);
+			// Regra tres = new Regra("LOC", ">", 260, null);
+			regras.add(dois);regras.add(um);
+			
+			// regras.add(tres);
+			Algoritmo alg = new Algoritmo(sheet);
+
+			alg.runAlgoritmo("LongMethod", regras);
+
+			
+			  List<Integer> lista = alg.getMethods(); 
+			  for (int i : lista) {
+			  System.out.println(i); }
+			  System.out.println(lista.size());
+			 
+
+			/*Map<String, Integer> temp = alg.getIndicadores();
+			for (String i : temp.keySet())
+				System.out.println(i + "->" + temp.get(i));
+*/
+		} catch (EncryptedDocumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 }
