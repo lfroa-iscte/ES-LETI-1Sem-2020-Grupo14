@@ -28,10 +28,11 @@ public class GUI {
 	private JComboBox<String> metricas;
 	private JComboBox<String> operador;
 	private JTextArea regras;
-	private JPanel secondPanel;
-	private JPanel thirdPanel;
+	private JPanel thresholdsPanel;
+	private JPanel rulePanel;
 	private JPanel mainPanel;
 	private ArrayList<Regra> listaRegras;
+	private int contadorRegras;
 
 	public GUI() {
 		janela = new JFrame("DetetorDefeitos3000");
@@ -92,12 +93,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 
 				if (data == null || listaRegras.isEmpty()) {
-					JLabel error_msg = new JLabel("  Ficheiro não importado ou regra não definida !!! ");
-					JDialog error = new JDialog(janela);
-					error.add(error_msg);
-					error.setSize(350, 125);
-					error.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
-					error.setVisible(true);
+					showErrorDialog("Ficheiro não importado ou regra não definida !!!", 350 , 125);
 
 				} else {
 
@@ -291,9 +287,20 @@ public class GUI {
 
 		janelaExcel.setVisible(true);
 	}
+	
+	private void showErrorDialog(String msg , int w, int h) {
+		JLabel error_msg = new JLabel(msg);
+		JDialog error = new JDialog(janela);
+		error.add(error_msg);
+		error.setSize(w,h);
+		error.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
+		error.setVisible(true);
+
+	}
 
 	// Definicao de Regras
 	private void setPopUp(String aux) {
+		contadorRegras=0;
 		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();
 
@@ -309,7 +316,7 @@ public class GUI {
 		JButton checkR = new JButton("OK");
 
 		mainPanel = new JPanel(new BorderLayout());
-		secondPanel = new JPanel(new BorderLayout());
+		thresholdsPanel = new JPanel(new BorderLayout());
 		GridBagLayout layout = new GridBagLayout();
 		JPanel thresholds = new JPanel(layout);
 		JPanel checkRule = new JPanel(new FlowLayout());
@@ -323,7 +330,7 @@ public class GUI {
 		metricas = new JComboBox<String>();
 		operador = new JComboBox<String>(operadores);
 
-		thirdPanel = new JPanel(new FlowLayout());
+		rulePanel = new JPanel(new FlowLayout());
 
 		if (aux.equals("Definir regra - LongMethod")) {
 			for (String string : longMethod) {
@@ -358,22 +365,29 @@ public class GUI {
 		thresholds.add(threshold, gbc);
 
 		addThreshold.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				regras.setVisible(true);
-				regras.setEditable(false);
-				regras.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-						"Thresholds Definidas", TitledBorder.CENTER, TitledBorder.TOP));
+				
+				if (contadorRegras < 3 ) {
+					regras.setVisible(true);
+					regras.setEditable(false);
+					regras.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+							"Thresholds Definidas", TitledBorder.CENTER, TitledBorder.TOP));
 
-				regras.setText(regras.getText() + metricas.getSelectedItem().toString() + " "
-						+ operador.getSelectedItem().toString() + " " + threshold.getText() + "\n");
-				secondPanel.add(regras, BorderLayout.CENTER);
+					regras.setText(regras.getText() + metricas.getSelectedItem().toString() + " "
+							+ operador.getSelectedItem().toString() + " " + threshold.getText() + "\n");
+					thresholdsPanel.add(regras, BorderLayout.CENTER);
 
-				listaRegras.add(new Regra(metricas.getSelectedItem().toString(), operador.getSelectedItem().toString(),
-						Integer.parseInt(threshold.getText()), null));
+					listaRegras.add(new Regra(metricas.getSelectedItem().toString(),
+							operador.getSelectedItem().toString(), Integer.parseInt(threshold.getText()), null));
 
-				janelaRegras.setVisible(true);
+					janelaRegras.setVisible(true);
+					
+				}else {
+					showErrorDialog("  Número máximo de métricas atingido!!", 250, 125);
+				}
+				contadorRegras++;
 
 			}
 		});
@@ -385,7 +399,8 @@ public class GUI {
 				regras.setText(null);
 				regras.setVisible(false);
 				listaRegras.clear();
-				thirdPanel.removeAll();
+				rulePanel.removeAll();
+				contadorRegras = 0;
 			}
 		});
 
@@ -394,7 +409,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				thirdPanel.removeAll();
+				rulePanel.removeAll();
 
 				int l = listaRegras.size() * 2 - 1;
 				String[] temp = new String[listaRegras.size()];
@@ -407,15 +422,15 @@ public class GUI {
 
 				for (int t = 0; t < l; t++) {
 					if (t % 2 == 0) {
-						thirdPanel.add(new JComboBox<String>(temp));
+						rulePanel.add(new JComboBox<String>(temp));
 					} else {
-						thirdPanel.add(new JComboBox<String>(opLogico));
+						rulePanel.add(new JComboBox<String>(opLogico));
 					}
 				}
 
-				thirdPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+				rulePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
 						"Regra Definida", TitledBorder.CENTER, TitledBorder.TOP));
-				mainPanel.add(thirdPanel, BorderLayout.CENTER);
+				mainPanel.add(rulePanel, BorderLayout.CENTER);
 				janelaRegras.setVisible(true);
 
 			}
@@ -427,7 +442,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Regra> aux = new ArrayList<Regra>();
 
-				Component[] comp = thirdPanel.getComponents();
+				Component[] comp = rulePanel.getComponents();
 
 				for (int i = 0; i < comp.length; i += 2) {
 					for (Regra r : listaRegras) {
@@ -458,12 +473,12 @@ public class GUI {
 		button_aux.add(reset);
 		button_aux.add(confirmar_thresholds);
 		buttonPanel.add(button_aux, BorderLayout.WEST);
-		secondPanel.add(thresholds, BorderLayout.WEST);
-		secondPanel.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
+		thresholdsPanel.add(thresholds, BorderLayout.WEST);
+		thresholdsPanel.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
 
 		checkRule.add(checkR);
 		mainPanel.add(checkRule, BorderLayout.SOUTH);
-		mainPanel.add(secondPanel, BorderLayout.NORTH);
+		mainPanel.add(thresholdsPanel, BorderLayout.NORTH);
 		janelaRegras.add(mainPanel);
 
 		janelaRegras.setVisible(true);
