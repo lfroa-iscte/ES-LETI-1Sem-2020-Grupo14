@@ -92,8 +92,8 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (data == null || listaRegras.isEmpty()) {
-					showErrorDialog("Ficheiro não importado ou regra não definida !!!", 350 , 125);
+				if (data == null || ferramentaSelecionada == null) {
+					showErrorDialog("Ficheiro não importado ou regra não definida !!!", 350, 125);
 
 				} else {
 
@@ -287,12 +287,12 @@ public class GUI {
 
 		janelaExcel.setVisible(true);
 	}
-	
-	private void showErrorDialog(String msg , int w, int h) {
+
+	private void showErrorDialog(String msg, int w, int h) {
 		JLabel error_msg = new JLabel(msg);
 		JDialog error = new JDialog(janela);
 		error.add(error_msg);
-		error.setSize(w,h);
+		error.setSize(w, h);
 		error.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
 		error.setVisible(true);
 
@@ -300,7 +300,7 @@ public class GUI {
 
 	// Definicao de Regras
 	private void setPopUp(String aux) {
-		contadorRegras=0;
+		contadorRegras = 0;
 		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();
 
@@ -365,11 +365,11 @@ public class GUI {
 		thresholds.add(threshold, gbc);
 
 		addThreshold.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				if (contadorRegras < 3 ) {
+
+				if (contadorRegras < 3) {
 					regras.setVisible(true);
 					regras.setEditable(false);
 					regras.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
@@ -383,8 +383,8 @@ public class GUI {
 							operador.getSelectedItem().toString(), Integer.parseInt(threshold.getText()), null));
 
 					janelaRegras.setVisible(true);
-					
-				}else {
+
+				} else {
 					showErrorDialog("  Número máximo de métricas atingido!!", 250, 125);
 				}
 				contadorRegras++;
