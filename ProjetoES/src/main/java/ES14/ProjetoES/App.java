@@ -1,13 +1,8 @@
 package ES14.ProjetoES;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+public class App {
+	public static void main(String[] args) {
+		GUI gui = new GUI();
+		gui.open();
+	}
 }

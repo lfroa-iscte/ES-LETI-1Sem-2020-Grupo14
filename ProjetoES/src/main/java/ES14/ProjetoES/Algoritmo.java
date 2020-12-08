@@ -1,18 +1,13 @@
 package ES14.ProjetoES;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.*;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class Algoritmo {
 
@@ -105,10 +100,10 @@ public class Algoritmo {
 
 				else if (i.getOp().equals("<") && row.getCell(cell).getNumericCellValue() < i.getValor())
 					smell = true;
-				
-				else if(i.getOp().equals("<=") && row.getCell(cell).getNumericCellValue() <= i.getValor())
-					smell=true;
-				
+
+				else if (i.getOp().equals("<=") && row.getCell(cell).getNumericCellValue() <= i.getValor())
+					smell = true;
+
 				else
 					smell = false;
 			}
@@ -183,40 +178,5 @@ public class Algoritmo {
 
 	public Map<String, Integer> getIndicadores() {
 		return indicadores;
-	}
-
-	public static void main(String[] args) {
-		String path = new String("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx");
-		try {
-			Workbook workbook = WorkbookFactory.create(new File(path));
-			Sheet sheet = workbook.getSheetAt(0);
-			List<Regra> regras = new ArrayList<>();
-			Regra dois = new Regra("LOC", ">=", 18, "OR");
-			Regra um = new Regra("CYCLO", ">=", 3, null);
-			// Regra tres = new Regra("LOC", ">", 260, null);
-			regras.add(dois);regras.add(um);
-			
-			// regras.add(tres);
-			Algoritmo alg = new Algoritmo(sheet);
-
-			alg.runAlgoritmo("LongMethod", regras);
-
-			
-			  List<Integer> lista = alg.getMethods(); 
-			  for (int i : lista) {
-			  System.out.println(i); }
-			  System.out.println(lista.size());
-			 
-
-			/*Map<String, Integer> temp = alg.getIndicadores();
-			for (String i : temp.keySet())
-				System.out.println(i + "->" + temp.get(i));
-*/
-		} catch (EncryptedDocumentException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 }

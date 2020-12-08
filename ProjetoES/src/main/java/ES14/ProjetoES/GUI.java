@@ -32,7 +32,6 @@ public class GUI {
 	private JPanel thirdPanel;
 	private JPanel mainPanel;
 	private ArrayList<Regra> listaRegras;
-	private ArrayList<JComboBox<String>> combos;
 
 	public GUI() {
 		janela = new JFrame("DetetorDefeitos3000");
@@ -92,11 +91,11 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (data == null) {
-					JLabel error_msg = new JLabel("  Ficheiro não importado!!");
+				if (data == null || listaRegras.isEmpty()) {
+					JLabel error_msg = new JLabel("  Ficheiro não importado ou regra não definida !!! ");
 					JDialog error = new JDialog(janela);
 					error.add(error_msg);
-					error.setSize(200, 125);
+					error.setSize(350, 125);
 					error.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
 					error.setVisible(true);
 
@@ -228,10 +227,6 @@ public class GUI {
 		janela.setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		new GUI().open();
-	}
-
 	private void readExcel(String path) throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook(new File(path));
 		sheet = workbook.getSheetAt(0);
@@ -301,7 +296,6 @@ public class GUI {
 	private void setPopUp(String aux) {
 		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();
-		combos = new ArrayList<JComboBox<String>>();
 
 		janelaRegras = new JDialog(janela, aux);
 		janelaRegras.pack();
@@ -411,14 +405,10 @@ public class GUI {
 					i++;
 				}
 
-				JComboBox<String> combo = new JComboBox<String>(temp);
-				JComboBox<String> comboOperadores = new JComboBox<String>(opLogico);
 				for (int t = 0; t < l; t++) {
 					if (t % 2 == 0) {
-						combos.add(combo);
 						thirdPanel.add(new JComboBox<String>(temp));
 					} else {
-						combos.add(comboOperadores);
 						thirdPanel.add(new JComboBox<String>(opLogico));
 					}
 				}
@@ -437,27 +427,27 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Regra> aux = new ArrayList<Regra>();
 
-				for (int i = 0; i < combos.size(); i += 2) {
+				Component[] comp = thirdPanel.getComponents();
+
+				for (int i = 0; i < comp.length; i += 2) {
 					for (Regra r : listaRegras) {
-						if (i != combos.size() - 1) {
-							if (r.checkRule(combos.get(i).getSelectedItem().toString())) {
-								r.setOpLogico(combos.get(i + 1).getSelectedItem().toString());
-								aux.add(r);
+						if (i != comp.length - 1) {
+							if (r.checkRule(((JComboBox) comp[i]).getSelectedItem().toString())) {
+								aux.add(new Regra(r.getMetrica(), r.getOp(), r.getValor(),
+										((JComboBox) comp[i + 1]).getSelectedItem().toString()));
 								break;
 							}
 						} else {
-							aux.add(r);
-							break;
-
+							if (r.checkRule(((JComboBox) comp[i]).getSelectedItem().toString())) {
+								aux.add(r);
+								break;
+							}
 						}
 					}
 				}
 
 				listaRegras = aux;
 				janelaRegras.dispose();
-				for (JComboBox<String> r : combos) {
-					System.out.println(r.getSelectedItem().toString());
-				}
 			}
 		});
 
