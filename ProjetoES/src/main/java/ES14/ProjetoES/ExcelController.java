@@ -8,6 +8,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+/**
+ * 
+ * Esta classe  lê o excel e guarda a informação deste
+ * 
+ * @author Francisco Mendes
+ * @version 1.0
+ * @since 24/10/2020
+ */
+
 public class ExcelController {
 
 	private XSSFSheet sheet;
@@ -41,15 +50,39 @@ public class ExcelController {
 			}
 		}
 	}
-
+	
+	/**
+	 * 
+	 * Devolve a sheet do excel
+	 * 
+	 * @return XSSFSheet
+	 * 
+	 *  @author Francisco Mendes
+	 */
 	public XSSFSheet getSheet() {
 		return sheet;
 	}
 
+	/**
+	 * 
+	 * Devolve os header do excel num vetor
+	 * 
+	 * @return String[]
+	 * 
+	 *  @author Francisco Mendes
+	 */
 	public String[] getHeaders() {
 		return headers;
 	}
 
+	/**
+	 * 
+	 * Devolve os dados do excel numa matriz
+	 * 
+	 * @return String[][]
+	 * 
+	 *  @author Francisco Mendes
+	 */
 	public String[][] getData() {
 		return data;
 	}
