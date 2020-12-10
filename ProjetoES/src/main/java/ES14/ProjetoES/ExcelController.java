@@ -10,11 +10,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * 
- * Esta classe  lê o excel e guarda a informação deste
+ * Esta classe lê o excel e guarda a informação deste
  * 
  * @author Francisco Mendes
  * @version 1.0
- * @since 24/10/2020
+ * @since 2020-12-10
  */
 
 public class ExcelController {
@@ -26,8 +26,8 @@ public class ExcelController {
 	/**
 	 * Lê um ficheiro Excel localizado em <i>path</i>.
 	 * 
-	 * @param path Localização do ficheiro Excel.
-	 * @throws Exception
+	 * @param path 				Localização do ficheiro Excel.
+	 * @throws Exception		Erro quando localização dada em <i>path</i> está incorreta.
 	 * 
 	 * @author Francisco Mendes
 	 */
@@ -50,38 +50,35 @@ public class ExcelController {
 			}
 		}
 	}
-	
+
 	/**
+	 * Devolve a sheet do excel.
 	 * 
-	 * Devolve a sheet do excel
+	 * @return XSSFSheet.
 	 * 
-	 * @return XSSFSheet
-	 * 
-	 *  @author Francisco Mendes
+	 * @author Francisco Mendes.
 	 */
 	public XSSFSheet getSheet() {
 		return sheet;
 	}
 
 	/**
+	 * Devolve os headers do excel num vetor.
 	 * 
-	 * Devolve os header do excel num vetor
+	 * @return String[].
 	 * 
-	 * @return String[]
-	 * 
-	 *  @author Francisco Mendes
+	 * @author Francisco Mendes.
 	 */
 	public String[] getHeaders() {
 		return headers;
 	}
 
 	/**
+	 * Devolve os dados do excel numa matriz.
 	 * 
-	 * Devolve os dados do excel numa matriz
+	 * @return String[][].
 	 * 
-	 * @return String[][]
-	 * 
-	 *  @author Francisco Mendes
+	 * @author Francisco Mendes.
 	 */
 	public String[][] getData() {
 		return data;

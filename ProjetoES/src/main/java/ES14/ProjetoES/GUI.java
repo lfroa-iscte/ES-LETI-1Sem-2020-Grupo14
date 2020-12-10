@@ -43,8 +43,8 @@ public class GUI {
 	/**
 	 * Cria a janela principal e adiciona os conteúdos a esta.
 	 * 
-	 * @author Tomás Santos
-	 * @author Francisco Mendes
+	 * @author Tomás Santos.
+	 * @author Francisco Mendes.
 	 */
 
 	public GUI() {
@@ -60,8 +60,11 @@ public class GUI {
 	/**
 	 * Adiciona os conteúdos à janela principal.
 	 * 
-	 * @author Tomás Santos
-	 * @author Francisco Mendes
+	 * @see ExcelController.
+	 * @see Algoritmo.
+	 * 
+	 * @author Tomás Santos.
+	 * @author Francisco Mendes.
 	 */
 	private void addFrameContent() {
 
@@ -241,8 +244,8 @@ public class GUI {
 	/**
 	 * Coloca a janela principal visível.
 	 * 
-	 * @author Tomás Santos
-	 * @author Francisco Mendes
+	 * @author Tomás Santos.
+	 * @author Francisco Mendes.
 	 */
 
 	public void open() {
@@ -254,7 +257,9 @@ public class GUI {
 	 * conteúdo lido de um ficheiro excel.
 	 * 
 	 * 
-	 * @param nome
+	 * @param nome.
+	 * 
+	 * @see ExcelController
 	 * 
 	 * @author Tomás Santos
 	 * @author Francisco Mendes
@@ -282,12 +287,12 @@ public class GUI {
 	 * Cria e mostra um JDialog centrado referente à janela principal de comprimento
 	 * <i>width</i> e <i>height</i> com uma mensagem <i>message</i>.
 	 * 
-	 * @param message Mensagem a mostrar
-	 * @param width   Comprimento do JDialog
-	 * @param height  Altura do JDialog
+	 * @param message Mensagem a mostrar.
+	 * @param width   Comprimento do JDialog.
+	 * @param height  Altura do JDialog.
 	 * 
-	 * @author Tomás Santos
-	 * @author Francisco Mendes
+	 * @author Tomás Santos.
+	 * @author Francisco Mendes.
 	 * 
 	 */
 
@@ -301,7 +306,16 @@ public class GUI {
 
 	}
 
-	// Definicao de Regras
+	/**
+	 * Cria e mostra uma janela (temporária) para o utilizador definir as suas próprias regras
+	 * consoante o code smell escolhido em <i>aux</i>.
+	 * 
+	 * @param aux Code smell escolhido pelo utilizador.
+	 * 
+	 * @author Tomás Santos.
+	 * @author Francisco Mendes.
+	 */
+
 	private void setPopUp(String aux) {
 		contadorRegras = 0;
 		listaRegras = new ArrayList<Regra>();
