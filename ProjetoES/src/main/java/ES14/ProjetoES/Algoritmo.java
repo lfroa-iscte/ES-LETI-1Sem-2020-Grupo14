@@ -6,12 +6,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * 
- * Esta classe representa o algoritmo que devolve os métodos defeituosos e indicadores de qualidade, consoante a utilização de dada regra/ferramenta. 
+ * Esta classe representa o algoritmo que devolve os métodos defeituosos e
+ * indicadores de qualidade, consoante a utilização de dada regra/ferramenta.
  * 
  * @author Lucas Oliveira
  * @version 1.0
@@ -36,7 +39,8 @@ public class Algoritmo {
 	private Sheet sheet;
 
 	/**
-	 * O Algoritmo recebe uma sheet do Excel importado na GUI, de forma a poder iterar sobre ela e 
+	 * O Algoritmo recebe uma sheet do Excel importado na GUI, de forma a poder
+	 * iterar sobre ela e
 	 * 
 	 * @param sheet
 	 * 
@@ -87,7 +91,7 @@ public class Algoritmo {
 
 			}
 		}
-		indicadoresQualidade=mapToMatrix(indicadores);
+		indicadoresQualidade = mapToMatrix(indicadores);
 	}
 
 	private void retMetodosRegra(List<Regra> regras) {
@@ -101,7 +105,7 @@ public class Algoritmo {
 
 			}
 		}
-		metodos=arrayToMatrix(methods);
+		metodos = arrayToMatrix(methods);
 	}
 
 	private void checkForSmell(Row row, List<Regra> regras) {
@@ -112,19 +116,21 @@ public class Algoritmo {
 			if (regras.indexOf(i) == 0 || (!smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR"))
 					|| (smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
 				
-				System.out.println(row.getCell(cell).getNumericCellValue());
-				//System.out.println(row.getCell(cell).getStringCellValue());
-				
-				if (i.getOp().equals(">") && row.getCell(cell).getNumericCellValue() > i.getValor())
+				Cell temp = row.getCell(cell);
+				DataFormatter dataFormatter = new DataFormatter();
+				String t = dataFormatter.formatCellValue(temp);
+				double num = Double.parseDouble(t);
+
+				if (i.getOp().equals(">") && num > i.getValor())
 					smell = true;
 
-				else if (i.getOp().equals(">=") && row.getCell(cell).getNumericCellValue() >= i.getValor())
+				else if (i.getOp().equals(">=") && num >= i.getValor())
 					smell = true;
 
-				else if (i.getOp().equals("<") && row.getCell(cell).getNumericCellValue() < i.getValor())
+				else if (i.getOp().equals("<") && num < i.getValor())
 					smell = true;
 
-				else if (i.getOp().equals("<=") && row.getCell(cell).getNumericCellValue() <= i.getValor())
+				else if (i.getOp().equals("<=") && num <= i.getValor())
 					smell = true;
 
 				else
@@ -166,7 +172,7 @@ public class Algoritmo {
 				}
 			}
 		}
-		metodos=arrayToMatrix(methods);
+		metodos = arrayToMatrix(methods);
 	}
 
 	private void checkIndicadoresFerramenta(String ferramenta) {
@@ -194,24 +200,23 @@ public class Algoritmo {
 					indicadores.put("ADII", indicadores.get("ADII") + 1);
 			}
 		}
-		
-		indicadoresQualidade=mapToMatrix(indicadores);
+
+		indicadoresQualidade = mapToMatrix(indicadores);
 	}
 
-	public String[][] getIndicadores(){
+	public String[][] getIndicadores() {
 		return indicadoresQualidade;
 	}
-	
-	public String[][] getMetodos(){
+
+	public String[][] getMetodos() {
 		return metodos;
 	}
-	
 
 	/**
 	 * Converte um Map<String, Integer> numa matriz de Strings.
 	 * 
-	 * @param aux 					Map<String, Integer>
-	 * @return String[][] 			Devolve uma matriz de strings.
+	 * @param aux Map<String, Integer>
+	 * @return String[][] Devolve uma matriz de strings.
 	 * 
 	 * @author Lucas Oliveira
 	 * @author Francisco Mendes
@@ -233,12 +238,12 @@ public class Algoritmo {
 		}
 		return aux1;
 	}
-	
+
 	/**
 	 * Converte um ArrayList de inteiros numa matriz de Strings.
 	 * 
-	 * @param aux 					 ArrayList de inteiros
-	 * @return String[][]			 Matriz de strings.
+	 * @param aux ArrayList de inteiros
+	 * @return String[][] Matriz de strings.
 	 * 
 	 * @author Lucas Oliveira
 	 * @author Francisco Mendes
