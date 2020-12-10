@@ -111,6 +111,10 @@ public class Algoritmo {
 			int cell = metrica(i.getMetrica());
 			if (regras.indexOf(i) == 0 || (!smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR"))
 					|| (smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
+				
+				System.out.println(row.getCell(cell).getNumericCellValue());
+				//System.out.println(row.getCell(cell).getStringCellValue());
+				
 				if (i.getOp().equals(">") && row.getCell(cell).getNumericCellValue() > i.getValor())
 					smell = true;
 

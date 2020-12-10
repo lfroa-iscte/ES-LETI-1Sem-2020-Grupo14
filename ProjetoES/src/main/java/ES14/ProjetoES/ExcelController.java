@@ -10,14 +10,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelController {
 
-	private String path;
 	private XSSFSheet sheet;
 	private String[] headers;
 	private String[][] data;
-
-	public ExcelController(String path) {
-		this.path = path;
-	}
 
 	/**
 	 * Lê um ficheiro Excel localizado em <i>path</i>.
@@ -27,7 +22,7 @@ public class ExcelController {
 	 * 
 	 * @author Francisco Mendes
 	 */
-	public void readExcel() throws Exception {
+	public void readExcel(String path) throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook(new File(path));
 		sheet = workbook.getSheetAt(0);
 

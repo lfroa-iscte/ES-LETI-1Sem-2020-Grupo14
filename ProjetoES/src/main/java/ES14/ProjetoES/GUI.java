@@ -65,6 +65,8 @@ public class GUI {
 	 */
 	private void addFrameContent() {
 
+		excel_controller = new ExcelController();
+
 		final JPanel ferramentas = new JPanel(new BorderLayout());
 
 		JPanel botoes = new JPanel(new FlowLayout());
@@ -86,9 +88,8 @@ public class GUI {
 
 					selectedFile = chooser.getSelectedFile();
 
-					excel_controller = new ExcelController(selectedFile.getAbsolutePath());
 					try {
-						excel_controller.readExcel();
+						excel_controller.readExcel(selectedFile.getAbsolutePath());
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
