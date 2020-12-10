@@ -310,8 +310,8 @@ public class GUI {
 	/**
 	 * Converte um Map<String, Integer> numa matriz de Strings.
 	 * 
-	 * @param aux É um Map<String, Integer>
-	 * @return String[][] Devolve uma matriz de strings.
+	 * @param aux 					Map<String, Integer>
+	 * @return String[][] 			Devolve uma matriz de strings.
 	 * 
 	 * @author Lucas Oliveira
 	 * @author Francisco Mendes
@@ -367,9 +367,9 @@ public class GUI {
 	 * Cria e mostra um JDialog centrado referente à janela principal de comprimento
 	 * <i>width</i> e <i>height</i> com uma mensagem <i>message</i>.
 	 * 
-	 * @param message Mensagem a mostrar
-	 * @param width   Comprimento do JDialog
-	 * @param height  Altura do JDialog
+	 * @param message 				Mensagem a mostrar
+	 * @param width   				Comprimento do JDialog
+	 * @param height  				Altura do JDialog
 	 * 
 	 * @author Tomás Santos
 	 * @author Francisco Mendes
