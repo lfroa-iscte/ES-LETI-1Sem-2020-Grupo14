@@ -1,5 +1,20 @@
 package ES14.ProjetoES;
 
+/**
+ * <h1>GUI<h1>
+ * <p>
+ * A classe GUI implementa uma interface gráfica disponível para um utilizador de modo a que este possa avaliar a qualidade de deteção de code smells
+ * em projetos de software, podendo-se basear em duas ferramentas de deteção (iPlasma e PMD), ou então criando ele próprio as suas regras para a avaliação
+ * da qualidade dos code smells long_method e feature_envy.
+ * <p>
+ * 
+ * @author Tomás Santos
+ * @author Francisco Mendes
+ * @version 1.0
+ * @since 2020-10-24
+ * 
+ */
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +49,13 @@ public class GUI {
 	private ArrayList<Regra> listaRegras;
 	private int contadorRegras;
 
+	/**
+	 * Cria a janela principal e adiciona os conteúdos a esta.
+	 * 
+	 * @author Tomás Santos
+	 * @author Francisco Mendes
+	 */
+
 	public GUI() {
 		janela = new JFrame("DetetorDefeitos3000");
 		janela.pack();
@@ -44,6 +66,12 @@ public class GUI {
 
 	}
 
+	/**
+	 * Adiciona os conteúdos à janela principal.
+	 * 
+	 * @author Tomás Santos
+	 * @author Francisco Mendes
+	 */
 	private void addFrameContent() {
 
 		final JPanel ferramentas = new JPanel(new BorderLayout());
@@ -74,7 +102,7 @@ public class GUI {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					setExcel(selectedFile.getName());
+					setExcelFrame(selectedFile.getName());
 				}
 
 			}
@@ -219,10 +247,25 @@ public class GUI {
 
 	}
 
+	/**
+	 * Coloca a janela principal visível.
+	 * 
+	 * @author Tomás Santos
+	 * @author Francisco Mendes
+	 */
+
 	public void open() {
 		janela.setVisible(true);
 	}
 
+	/**
+	 * Lê um ficheiro Excel localizado em <i>path</i>.
+	 * 
+	 * @param path					 Localização do ficheiro Excel.	
+	 * @throws Exception			 
+	 * 
+	 * @author Francisco Mendes
+	 */
 	private void readExcel(String path) throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook(new File(path));
 		sheet = workbook.getSheetAt(0);
@@ -243,6 +286,16 @@ public class GUI {
 		}
 	}
 
+	/**
+	 * Converte um ArrayList de inteiros numa matriz de Strings.
+	 * 
+	 * @param aux 					 ArrayList de inteiros
+	 * @return String[][]			 Matriz de strings.
+	 * 
+	 * @author Lucas Oliveira
+	 * @author Francisco Mendes
+	 */
+
 	private String[][] arrayToMatrix(ArrayList<Integer> aux) {
 		int l = 0;
 		String[][] aux1 = new String[aux.size()][1];
@@ -253,6 +306,17 @@ public class GUI {
 		}
 		return aux1;
 	}
+
+	/**
+	 * Converte um Map<String, Integer> numa matriz de Strings.
+	 * 
+	 * @param aux É um Map<String, Integer>
+	 * @return String[][] Devolve uma matriz de strings.
+	 * 
+	 * @author Lucas Oliveira
+	 * @author Francisco Mendes
+	 *
+	 */
 
 	private String[][] mapToMatrix(Map<String, Integer> aux) {
 
@@ -270,9 +334,20 @@ public class GUI {
 		return aux1;
 	}
 
-	private void setExcel(String name) {
+	/**
+	 * Cria uma janela maximizada com o nome <i>nome</i> com uma tabela com o conteúdo
+	 * lido de um ficheiro excel.
+	 * 
+	 * 
+	 * @param nome
+	 * 
+	 * @author Tomás Santos
+	 * @author Francisco Mendes
+	 */
 
-		JFrame janelaExcel = new JFrame(name);
+	private void setExcelFrame(String nome) {
+
+		JFrame janelaExcel = new JFrame(nome);
 		janelaExcel.pack();
 		janelaExcel.setSize(1200, 900);
 		janelaExcel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -288,11 +363,24 @@ public class GUI {
 		janelaExcel.setVisible(true);
 	}
 
-	private void showErrorDialog(String msg, int w, int h) {
-		JLabel error_msg = new JLabel(msg);
+	/**
+	 * Cria e mostra um JDialog centrado referente à janela principal de comprimento
+	 * <i>width</i> e <i>height</i> com uma mensagem <i>message</i>.
+	 * 
+	 * @param message Mensagem a mostrar
+	 * @param width   Comprimento do JDialog
+	 * @param height  Altura do JDialog
+	 * 
+	 * @author Tomás Santos
+	 * @author Francisco Mendes
+	 * 
+	 */
+
+	private void showErrorDialog(String message, int width, int height) {
+		JLabel error_msg = new JLabel(message);
 		JDialog error = new JDialog(janela);
 		error.add(error_msg);
-		error.setSize(w, h);
+		error.setSize(width, height);
 		error.setLocation(janela.getWidth() / 2 - 100, janela.getHeight() / 2 - 125);
 		error.setVisible(true);
 
