@@ -2,12 +2,12 @@ package ES14.ProjetoES;
 
 public class Regra {
 
-	String metrica;
-	String op;
-	int valor;
-	String opLogico;
+	private String metrica;
+	private String op;
+	private double valor;
+	private String opLogico;
 
-	public Regra(String metrica, String op, int valor, String opLogico) {
+	public Regra(String metrica, String op, double valor, String opLogico) {
 		this.metrica = metrica;
 		this.op = op;
 		this.valor = valor;
@@ -26,7 +26,7 @@ public class Regra {
 		return op;
 	}
 
-	public int getValor() {
+	public double getValor() {
 		return valor;
 	}
 

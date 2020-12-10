@@ -20,23 +20,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 public class GUI {
 
 	private JFrame janela;
-	private XSSFSheet sheet;
-	private String[] headers;
-	private String[][] data;
 	private JDialog janelaRegras;
 	private String ferramentaSelecionada;
 	private JTextField threshold;
@@ -48,6 +38,7 @@ public class GUI {
 	private JPanel mainPanel;
 	private ArrayList<Regra> listaRegras;
 	private int contadorRegras;
+	private ExcelController excel_controller;
 
 	/**
 	 * Cria a janela principal e adiciona os conteúdos a esta.
@@ -94,11 +85,10 @@ public class GUI {
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 
 					selectedFile = chooser.getSelectedFile();
-					String excelPath = selectedFile.getAbsolutePath();
 
+					excel_controller = new ExcelController(selectedFile.getAbsolutePath());
 					try {
-
-						readExcel(excelPath);
+						excel_controller.readExcel();
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -120,7 +110,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (data == null || ferramentaSelecionada == null) {
+				if (excel_controller.getData() == null || ferramentaSelecionada == null) {
 					showErrorDialog("Ficheiro não importado ou regra não definida !!!", 350, 125);
 
 				} else {
@@ -129,7 +119,7 @@ public class GUI {
 						ferramentas.remove(painelAux);
 					}
 
-					alg = new Algoritmo(sheet);
+					alg = new Algoritmo(excel_controller.getSheet());
 
 					if (ferramentaSelecionada.equals("PMD") || ferramentaSelecionada.equals("iPlasma")) {
 						alg.runAlgoritmo(ferramentaSelecionada, null);
@@ -259,63 +249,8 @@ public class GUI {
 	}
 
 	/**
-	 * Lê um ficheiro Excel localizado em <i>path</i>.
-	 * 
-	 * @param path					 Localização do ficheiro Excel.	
-	 * @throws Exception			 
-	 * 
-	 * @author Francisco Mendes
-	 */
-	private void readExcel(String path) throws Exception {
-		XSSFWorkbook workbook = new XSSFWorkbook(new File(path));
-		sheet = workbook.getSheetAt(0);
-
-		DataFormatter dataFormatter = new DataFormatter();
-		headers = new String[sheet.getRow(0).getLastCellNum()];
-		data = new String[sheet.getLastRowNum()][sheet.getRow(0).getLastCellNum()];
-
-		for (Row row : sheet) {
-			for (Cell cell : row) {
-				String cellValue = dataFormatter.formatCellValue(cell);
-				if (cell.getRowIndex() != 0) {
-					data[row.getRowNum() - 1][cell.getColumnIndex()] = cellValue;
-				} else {
-					headers[cell.getColumnIndex()] = cellValue;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Converte um Map<String, Integer> numa matriz de Strings.
-	 * 
-	 * @param aux 					Map<String, Integer>
-	 * @return String[][] 			Devolve uma matriz de strings.
-	 * 
-	 * @author Lucas Oliveira
-	 * @author Francisco Mendes
-	 *
-	 */
-
-	private String[][] mapToMatrix(Map<String, Integer> aux) {
-
-		int c = 0;
-		int l = 0;
-		String[][] aux1 = new String[aux.size()][2];
-
-		for (String i : aux.keySet()) {
-			c = 0;
-			aux1[l][c] = i;
-			c++;
-			aux1[l][c] = aux.get(i).toString();
-			l++;
-		}
-		return aux1;
-	}
-
-	/**
-	 * Cria uma janela maximizada com o nome <i>nome</i> com uma tabela com o conteúdo
-	 * lido de um ficheiro excel.
+	 * Cria uma janela maximizada com o nome <i>nome</i> com uma tabela com o
+	 * conteúdo lido de um ficheiro excel.
 	 * 
 	 * 
 	 * @param nome
@@ -332,7 +267,7 @@ public class GUI {
 		janelaExcel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		janelaExcel.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-		JTable tabela = new JTable(data, headers);
+		JTable tabela = new JTable(excel_controller.getData(), excel_controller.getHeaders());
 		tabela.setEnabled(false);
 
 		JScrollPane center = new JScrollPane(tabela);
@@ -346,9 +281,9 @@ public class GUI {
 	 * Cria e mostra um JDialog centrado referente à janela principal de comprimento
 	 * <i>width</i> e <i>height</i> com uma mensagem <i>message</i>.
 	 * 
-	 * @param message 				Mensagem a mostrar
-	 * @param width   				Comprimento do JDialog
-	 * @param height  				Altura do JDialog
+	 * @param message Mensagem a mostrar
+	 * @param width   Comprimento do JDialog
+	 * @param height  Altura do JDialog
 	 * 
 	 * @author Tomás Santos
 	 * @author Francisco Mendes
@@ -447,7 +382,7 @@ public class GUI {
 					thresholdsPanel.add(regras, BorderLayout.CENTER);
 
 					listaRegras.add(new Regra(metricas.getSelectedItem().toString(),
-							operador.getSelectedItem().toString(), Integer.parseInt(threshold.getText()), null));
+							operador.getSelectedItem().toString(), Double.parseDouble(threshold.getText()), null));
 
 					janelaRegras.setVisible(true);
 
