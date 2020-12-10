@@ -9,6 +9,15 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+/**
+ * 
+ * Esta classe representa o algoritmo que devolve os métodos defeituosos e indicadores de qualidade, consoante a utilização de dada regra/ferramenta. 
+ * 
+ * @author Lucas Oliveira
+ * @version 1.0
+ * @since 24/10/2020
+ */
+
 public class Algoritmo {
 
 	private static int loc = 4;
@@ -22,9 +31,16 @@ public class Algoritmo {
 
 	private ArrayList<Integer> methods;
 	private Map<String, Integer> indicadores;
-
+	private String[][] indicadoresQualidade;
 	private Sheet sheet;
 
+	/**
+	 * O Algoritmo recebe uma sheet do Excel importado na GUI, de forma a poder iterar sobre ela e 
+	 * 
+	 * @param sheet
+	 * 
+	 * @author Lucas Oliveira
+	 */
 	public Algoritmo(Sheet sheet) {
 		this.sheet = sheet;
 		methods = new ArrayList<>();
@@ -70,6 +86,7 @@ public class Algoritmo {
 
 			}
 		}
+		indicadoresQualidade=mapToMatrix(indicadores);
 	}
 
 	private void retMetodosRegra(List<Regra> regras) {
@@ -170,13 +187,42 @@ public class Algoritmo {
 					indicadores.put("ADII", indicadores.get("ADII") + 1);
 			}
 		}
+		
+		indicadoresQualidade=mapToMatrix(indicadores);
 	}
 
 	public ArrayList<Integer> getMethods() {
 		return methods;
 	}
+	
+	public String[][] getIndicadores(){
+		return indicadoresQualidade;
+	}
 
-	public Map<String, Integer> getIndicadores() {
-		return indicadores;
+	/**
+	 * Converte um Map<String, Integer> numa matriz de Strings.
+	 * 
+	 * @param aux 					Map<String, Integer>
+	 * @return String[][] 			Devolve uma matriz de strings.
+	 * 
+	 * @author Lucas Oliveira
+	 * @author Francisco Mendes
+	 *
+	 */
+
+	private String[][] mapToMatrix(Map<String, Integer> aux) {
+
+		int c = 0;
+		int l = 0;
+		String[][] aux1 = new String[aux.size()][2];
+
+		for (String i : aux.keySet()) {
+			c = 0;
+			aux1[l][c] = i;
+			c++;
+			aux1[l][c] = aux.get(i).toString();
+			l++;
+		}
+		return aux1;
 	}
 }

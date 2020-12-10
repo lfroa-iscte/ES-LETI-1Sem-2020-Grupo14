@@ -145,7 +145,7 @@ public class GUI {
 					JPanel painelResultados = new JPanel(new FlowLayout());
 
 					JTable tabelaMethodID = new JTable(arrayToMatrix(alg.getMethods()), header);
-					JTable tabelaIndicadores = new JTable(mapToMatrix(alg.getIndicadores()), headerIndicadores);
+					JTable tabelaIndicadores = new JTable(alg.getIndicadores(), headerIndicadores);
 					tabelaIndicadores.setEnabled(false);
 					tabelaMethodID.setEnabled(false);
 
