@@ -32,6 +32,7 @@ public class Algoritmo {
 	private ArrayList<Integer> methods;
 	private Map<String, Integer> indicadores;
 	private String[][] indicadoresQualidade;
+	private String[][] metodos;
 	private Sheet sheet;
 
 	/**
@@ -100,6 +101,7 @@ public class Algoritmo {
 
 			}
 		}
+		metodos=arrayToMatrix(methods);
 	}
 
 	private void checkForSmell(Row row, List<Regra> regras) {
@@ -160,6 +162,7 @@ public class Algoritmo {
 				}
 			}
 		}
+		metodos=arrayToMatrix(methods);
 	}
 
 	private void checkIndicadoresFerramenta(String ferramenta) {
@@ -191,13 +194,14 @@ public class Algoritmo {
 		indicadoresQualidade=mapToMatrix(indicadores);
 	}
 
-	public ArrayList<Integer> getMethods() {
-		return methods;
-	}
-	
 	public String[][] getIndicadores(){
 		return indicadoresQualidade;
 	}
+	
+	public String[][] getMetodos(){
+		return metodos;
+	}
+	
 
 	/**
 	 * Converte um Map<String, Integer> numa matriz de Strings.
@@ -225,4 +229,26 @@ public class Algoritmo {
 		}
 		return aux1;
 	}
+	
+	/**
+	 * Converte um ArrayList de inteiros numa matriz de Strings.
+	 * 
+	 * @param aux 					 ArrayList de inteiros
+	 * @return String[][]			 Matriz de strings.
+	 * 
+	 * @author Lucas Oliveira
+	 * @author Francisco Mendes
+	 */
+
+	private String[][] arrayToMatrix(ArrayList<Integer> aux) {
+		int l = 0;
+		String[][] aux1 = new String[aux.size()][1];
+
+		for (Integer i : aux) {
+			aux1[l][0] = i.toString();
+			l++;
+		}
+		return aux1;
+	}
+
 }

@@ -144,7 +144,7 @@ public class GUI {
 					JPanel painelMetodos = new JPanel(new FlowLayout());
 					JPanel painelResultados = new JPanel(new FlowLayout());
 
-					JTable tabelaMethodID = new JTable(arrayToMatrix(alg.getMethods()), header);
+					JTable tabelaMethodID = new JTable(alg.getMetodos(), header);
 					JTable tabelaIndicadores = new JTable(alg.getIndicadores(), headerIndicadores);
 					tabelaIndicadores.setEnabled(false);
 					tabelaMethodID.setEnabled(false);
@@ -284,27 +284,6 @@ public class GUI {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Converte um ArrayList de inteiros numa matriz de Strings.
-	 * 
-	 * @param aux 					 ArrayList de inteiros
-	 * @return String[][]			 Matriz de strings.
-	 * 
-	 * @author Lucas Oliveira
-	 * @author Francisco Mendes
-	 */
-
-	private String[][] arrayToMatrix(ArrayList<Integer> aux) {
-		int l = 0;
-		String[][] aux1 = new String[aux.size()][1];
-
-		for (Integer i : aux) {
-			aux1[l][0] = i.toString();
-			l++;
-		}
-		return aux1;
 	}
 
 	/**
