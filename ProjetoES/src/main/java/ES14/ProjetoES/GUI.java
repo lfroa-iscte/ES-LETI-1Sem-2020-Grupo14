@@ -96,7 +96,8 @@ public class GUI {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					setExcelFrame(selectedFile.getName());
+//					setExcelFrame(selectedFile.getName());
+					setExcelFrame(selectedFile.getName(), excel_controller.getData(), excel_controller.getHeaders());
 				}
 
 			}
@@ -265,7 +266,7 @@ public class GUI {
 	 * @author Francisco Mendes
 	 */
 
-	private void setExcelFrame(String nome) {
+	public void setExcelFrame(String nome, String[][] data, String[] headers) {
 
 		JFrame janelaExcel = new JFrame(nome);
 		janelaExcel.pack();
@@ -273,7 +274,8 @@ public class GUI {
 		janelaExcel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		janelaExcel.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-		JTable tabela = new JTable(excel_controller.getData(), excel_controller.getHeaders());
+		JTable tabela = new JTable(data, headers);
+//		JTable tabela = new JTable(excel_controller.getData(), excel_controller.getHeaders());
 		tabela.setEnabled(false);
 
 		JScrollPane center = new JScrollPane(tabela);
@@ -296,7 +298,7 @@ public class GUI {
 	 * 
 	 */
 
-	private void showErrorDialog(String message, int width, int height) {
+	public void showErrorDialog(String message, int width, int height) {
 		JLabel error_msg = new JLabel(message);
 		JDialog error = new JDialog(janela);
 		error.add(error_msg);
@@ -316,7 +318,7 @@ public class GUI {
 	 * @author Francisco Mendes.
 	 */
 
-	private void setPopUp(String aux) {
+	public void setPopUp(String aux) {
 		contadorRegras = 0;
 		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();

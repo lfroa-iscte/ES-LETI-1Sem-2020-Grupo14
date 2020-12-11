@@ -11,7 +11,8 @@ public class AllTests {
 		suite.addTestSuite(testAlgoritmo.class);
 		suite.addTest(testApp.suite());
 		suite.addTestSuite(testExcelController.class);
-		
+		suite.addTestSuite(testGUI.class);
+
 		return suite;
 	}
 
