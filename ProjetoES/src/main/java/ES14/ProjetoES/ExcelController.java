@@ -54,7 +54,7 @@ public class ExcelController {
 	/**
 	 * Devolve a sheet do excel.
 	 * 
-	 * @return 				XSSFSheet Devolve as sheets do excel.
+	 * @return XSSFSheet 	Devolve a sheet do excel.
 	 * 
 	 * @author Francisco Mendes.
 	 */
