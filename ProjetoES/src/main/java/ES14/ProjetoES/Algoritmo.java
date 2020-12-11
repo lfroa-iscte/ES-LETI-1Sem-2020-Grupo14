@@ -16,9 +16,9 @@ import org.apache.poi.ss.usermodel.Sheet;
  * Esta classe representa o algoritmo que devolve os métodos defeituosos e
  * indicadores de qualidade, consoante a utilização de dada regra/ferramenta.
  * 
- * @author Lucas Oliveira
+ * @author Lucas Oliveira.
  * @version 1.0
- * @since 24/10/2020
+ * @since 2020-10-24
  */
 
 public class Algoritmo {
@@ -40,11 +40,12 @@ public class Algoritmo {
 
 	/**
 	 * O Algoritmo recebe uma sheet do Excel importado na GUI, de forma a poder
-	 * iterar sobre ela e
+	 * iterar sobre ela, obter os métodos defeituosos e os indicadores de qualidade
+	 * de uma dada ferramenta/regra.
 	 * 
-	 * @param sheet
+	 * @param sheet.
 	 * 
-	 * @author Lucas Oliveira
+	 * @author Lucas Oliveira.
 	 */
 	public Algoritmo(Sheet sheet) {
 		this.sheet = sheet;
@@ -56,6 +57,16 @@ public class Algoritmo {
 		indicadores.put("ADII", 0);
 	}
 
+	/**
+	 * Corre o algoritmo dada uma ferramenta/regra e, caso seja uma regra, de forma
+	 * a poder correr o algoritmo, é preciso também dar uma lista com as métricas e
+	 * respetivas thresholds, e operadores lógicos.
+	 * 
+	 * @param ferramenta Representa a ferramenta/regra a usar.
+	 * @param regras     Representa a lista de métricas, thresholds e op. lógicos.
+	 * 
+	 * @author Lucas Oliveira.
+	 */
 	public void runAlgoritmo(String ferramenta, List<Regra> regras) {
 
 		if (ferramenta.equals("PMD") || ferramenta.equals("iPlasma")) {
@@ -67,6 +78,14 @@ public class Algoritmo {
 		}
 	}
 
+	/**
+	 * Guarda os indicadores de qualidade de uma dada regra numa matriz, tendo em
+	 * conta o tipo de regra em questão (FeatureEnvy ou LongMethod). Utilizado
+	 * internamente pelo método runAlgoritmo().
+	 * 
+	 * @param ferramenta Representa o tipo de regra.
+	 * @author Lucas Oliveira.
+	 */
 	private void checkIndicadoresRegra(String ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
@@ -94,6 +113,14 @@ public class Algoritmo {
 		indicadoresQualidade = mapToMatrix(indicadores);
 	}
 
+	/**
+	 * Guarda numa matriz os métodos defeituosos consoante uma regra, representada
+	 * neste caso por uma lista de métricas e respetivas thresholds e op. lógicos.
+	 * Utilizado internamente pelo método runAlgoritmo().
+	 * 
+	 * @param regras Representa a lista de métricas, thresholds e op. lógicos.
+	 * @author Lucas Oliveira.
+	 */
 	private void retMetodosRegra(List<Regra> regras) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
@@ -108,6 +135,17 @@ public class Algoritmo {
 		metodos = arrayToMatrix(methods);
 	}
 
+	/**
+	 * Dada uma linha do Excel e uma regra, caso o método dessa linha seja
+	 * defeituoso, guarda-o numa lista Utilizado internamente pelo método
+	 * retMetodosRegra().
+	 * 
+	 * @param row    Linha do Excel.
+	 * @param regras Conjunto de métricas, thresholds e op. lógicos que representam
+	 *               a regra.
+	 * @author Lucas Oliveira.
+	 */
+
 	private void checkForSmell(Row row, List<Regra> regras) {
 		boolean smell = false;
 		for (Regra i : regras) {
@@ -115,7 +153,7 @@ public class Algoritmo {
 			int cell = metrica(i.getMetrica());
 			if (regras.indexOf(i) == 0 || (!smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR"))
 					|| (smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
-				
+
 				Cell temp = row.getCell(cell);
 				DataFormatter dataFormatter = new DataFormatter();
 				String t = dataFormatter.formatCellValue(temp);
@@ -141,6 +179,16 @@ public class Algoritmo {
 			methods.add(row.getRowNum());
 	}
 
+	/**
+	 * Devolve o número da coluna do Excel correspondente à métrica dada. Utilizado
+	 * internamente pelo método checkForSmell().
+	 * 
+	 * @param metrica Representa o nome da metrica em questão.
+	 * @return int.
+	 * @author Lucas Oliveira.
+	 * 
+	 */
+
 	private int metrica(String metrica) {
 		if (metrica.equals("LOC"))
 			return loc;
@@ -153,6 +201,13 @@ public class Algoritmo {
 
 	}
 
+	/**
+	 * Guarda numa matriz os métodos defeituosos de uma dada ferramenta. Utilizado
+	 * internamente pelo método runAlgoritmo().
+	 * 
+	 * @param ferramenta Representa a ferramenta utilizada(iPlasma, PMD).
+	 * @author Lucas Oliveira.
+	 */
 	private void retMetodos(String ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
@@ -175,6 +230,13 @@ public class Algoritmo {
 		metodos = arrayToMatrix(methods);
 	}
 
+	/**
+	 * Guarda os indicadores de qualidade de uma dada ferramenta numa matriz
+	 * (ferramenta é iPlasma ou PMD)
+	 * 
+	 * @param ferramenta
+	 * @author Lucas Oliveira
+	 */
 	private void checkIndicadoresFerramenta(String ferramenta) {
 
 		Iterator<Row> rowIterator = sheet.iterator();
@@ -204,16 +266,32 @@ public class Algoritmo {
 		indicadoresQualidade = mapToMatrix(indicadores);
 	}
 
+	/**
+	 * Utilizado externamente de forma a obter os indicadores de qualidade após a
+	 * utilização do algoritmo.
+	 * 
+	 * @return String[][]
+	 * @author Lucas Oliveira
+	 */
 	public String[][] getIndicadores() {
 		return indicadoresQualidade;
 	}
 
+	/**
+	 * Utilizado externamente de forma a obter os métodos defeituosos após a
+	 * utilização do algoritmo.
+	 * 
+	 * @return String[][]
+	 * @author Lucas Oliveira
+	 */
 	public String[][] getMetodos() {
 		return metodos;
 	}
 
 	/**
-	 * Converte um Map<String, Integer> numa matriz de Strings.
+	 * Converte um Map<String, Integer> numa matriz de Strings. Utilizado
+	 * internamente pelos métodos checkIndicadoresFerramenta() e
+	 * checkIndicadoreRegra().
 	 * 
 	 * @param aux Map<String, Integer>
 	 * @return String[][] Devolve uma matriz de strings.
@@ -222,7 +300,6 @@ public class Algoritmo {
 	 * @author Francisco Mendes
 	 *
 	 */
-
 	private String[][] mapToMatrix(Map<String, Integer> aux) {
 
 		int c = 0;
@@ -240,7 +317,8 @@ public class Algoritmo {
 	}
 
 	/**
-	 * Converte um ArrayList de inteiros numa matriz de Strings.
+	 * Converte um ArrayList de inteiros numa matriz de Strings. Utilizado
+	 * internamente pelos métodos retMetodos() e retMetodosRegra().
 	 * 
 	 * @param aux ArrayList de inteiros
 	 * @return String[][] Matriz de strings.
