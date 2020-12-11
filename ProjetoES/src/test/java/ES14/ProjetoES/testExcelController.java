@@ -1,38 +1,24 @@
 package ES14.ProjetoES;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import junit.framework.TestCase;
 
-
-public class testExcelController{
+public class testExcelController extends TestCase {
 
 	private static ExcelController excel;
 
-//	public ExcelControllerTest() {
-//		super();
-//	}
-
-	@BeforeAll
-	static public void setUpBeforeClass() throws Exception {
-		excel = new ExcelController();
-		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
-		System.out.println("OLA");
-	}
-//
-//	@AfterAll
-//	public void finalize() {
-//		System.out.println("ADEUS");
+//	@BeforeAll
+//	static public void setUpBeforeClass() throws Exception {
+//		excel = new ExcelController();
+//		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
 //	}
 
 	@Test
 	public void testReadExcel() throws Exception {
-//		 Verificar se está a ler corretamente posições aleatórias do ficheiro excel
-//
-//		excel = new ExcelController();
-//		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
+		excel = new ExcelController();
+		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
 
 		String[][] data = excel.getData();
 		String aux = "15";
@@ -47,9 +33,8 @@ public class testExcelController{
 
 	@Test
 	public void testHeaders() throws Exception {
-
-//		excel = new ExcelController();
-//		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
+		excel = new ExcelController();
+		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
 
 		String[] headers = excel.getHeaders();
 		String aux = "is_long_method";
@@ -57,20 +42,5 @@ public class testExcelController{
 
 		assertEquals(aux, headers[8]);
 		assertEquals(aux1, headers[3]);
-
 	}
-
-//	public void testSheet() throws Exception {
-//
-//		excel = new ExcelController();
-//		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
-//
-//		XSSFWorkbook workbook = new XSSFWorkbook(new File("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx"));
-//		XSSFSheet sheet = workbook.getSheetAt(0);
-//
-//		assertThat(sheet).isEqualToComparingFieldByField(excel.getSheet());
-//		assertEquals(sheet, excel.getSheet());
-//		assertThat(sheet).isEqualToComparingFieldByField(excel.getSheet());
-//	}
-
 }

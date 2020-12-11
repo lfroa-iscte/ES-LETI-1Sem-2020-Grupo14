@@ -8,8 +8,8 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllTests.class.getName());
 
-		suite.addTestSuite(AlgoritmoTest.class);
-		suite.addTest(AppTest.suite());
+		suite.addTestSuite(testAlgoritmo.class);
+		suite.addTest(testApp.suite());
 		suite.addTestSuite(testExcelController.class);
 		
 		return suite;

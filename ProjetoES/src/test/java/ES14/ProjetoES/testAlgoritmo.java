@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 
 import junit.framework.TestCase;
 
-public class AlgoritmoTest extends TestCase {
+public class testAlgoritmo extends TestCase {
 
-	public AlgoritmoTest() {
+	public testAlgoritmo() {
 		super();
 		
 	}
@@ -26,7 +26,7 @@ public class AlgoritmoTest extends TestCase {
 		app.main(null);
 		XSSFWorkbook workbook=null;
 		try {
-			workbook = new XSSFWorkbook(new File("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx"));
+			workbook = new XSSFWorkbook(new File("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx"));
 		} catch (InvalidFormatException | IOException e) {
 			e.printStackTrace();
 		}
@@ -42,7 +42,7 @@ public class AlgoritmoTest extends TestCase {
 	public void testPMD() {
 		XSSFWorkbook workbook=null;
 		try {
-			workbook = new XSSFWorkbook(new File("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx"));
+			workbook = new XSSFWorkbook(new File("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx"));
 		} catch (InvalidFormatException | IOException e) {
 			e.printStackTrace();
 		}
@@ -58,7 +58,7 @@ public class AlgoritmoTest extends TestCase {
 	public void testRegraLong() {
 		XSSFWorkbook workbook=null;
 		try {
-			workbook = new XSSFWorkbook(new File("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx"));
+			workbook = new XSSFWorkbook(new File("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx"));
 		} catch (InvalidFormatException | IOException e) {
 			e.printStackTrace();
 		}
@@ -80,7 +80,7 @@ public class AlgoritmoTest extends TestCase {
 	public void testRegraLong1() {
 		XSSFWorkbook workbook=null;
 		try {
-			workbook = new XSSFWorkbook(new File("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx"));
+			workbook = new XSSFWorkbook(new File("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx"));
 		} catch (InvalidFormatException | IOException e) {
 			e.printStackTrace();
 		}
@@ -102,7 +102,7 @@ public class AlgoritmoTest extends TestCase {
 	public void testRegraFeatureEnvy() {
 		XSSFWorkbook workbook=null;
 		try {
-			workbook = new XSSFWorkbook(new File("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx"));
+			workbook = new XSSFWorkbook(new File("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx"));
 		} catch (InvalidFormatException | IOException e) {
 			e.printStackTrace();
 		}
