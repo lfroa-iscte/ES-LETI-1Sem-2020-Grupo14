@@ -10,7 +10,7 @@ public class AllTests {
 
 		suite.addTestSuite(AlgoritmoTest.class);
 		suite.addTest(AppTest.suite());
-		suite.addTestSuite(ExcelControllerTest.class);
+		suite.addTestSuite(testExcelController.class);
 		
 		return suite;
 	}

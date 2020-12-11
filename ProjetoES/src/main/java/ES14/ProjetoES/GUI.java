@@ -257,7 +257,7 @@ public class GUI {
 	 * conteúdo lido de um ficheiro excel.
 	 * 
 	 * 
-	 * @param nome 			Nome do ficheiro excel.
+	 * @param nome Nome do ficheiro excel.
 	 * 
 	 * @see ExcelController
 	 * 
@@ -307,8 +307,8 @@ public class GUI {
 	}
 
 	/**
-	 * Cria e mostra uma janela (temporária) para o utilizador definir as suas próprias regras
-	 * consoante o code smell escolhido em <i>aux</i>.
+	 * Cria e mostra uma janela (temporária) para o utilizador definir as suas
+	 * próprias regras consoante o code smell escolhido em <i>aux</i>.
 	 * 
 	 * @param aux Code smell escolhido pelo utilizador.
 	 * 
