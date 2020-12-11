@@ -65,14 +65,17 @@ public class AlgoritmoTest extends TestCase {
 		Sheet sheet = workbook.getSheetAt(0);
 		Algoritmo alg=new Algoritmo(sheet);
 		Regra r=new Regra("LOC", ">", 300, "AND");
-		Regra r1=new Regra("CYCLO", ">", 10, "OR");
+		Regra r1=new Regra("CYCLO", ">", 10, null);
 		List<Regra> regras=new ArrayList();
 		regras.add(r);
 		regras.add(r1);
 		alg.runAlgoritmo("LongMethod",regras);
 		String[][] temp= {{"DCI", "22"}, {"DII", "0"}, {"ADCI", "280"}, {"ADII", "118"}};
+		String[][] temp1= {{"14"}, {"78"}, {"114"}, {"121"}, {"197"}, {"223"}, {"230"}, {"281"}, {"308"}, {"315"}, {"317"}, {"318"}, {"322"}, {"323"}, {"324"}, {"335"}, {"348"}, {"368"}, {"376"}, {"392"}, {"408"}, {"419"}};
 		String[][] algLista=alg.getIndicadores();
+		String[][] algMetodos=alg.getMetodos();
 		assertArrayEquals(temp,algLista);
+		assertArrayEquals(temp1, algMetodos);
 	}
 	public void testRegraLong1() {
 		XSSFWorkbook workbook=null;
