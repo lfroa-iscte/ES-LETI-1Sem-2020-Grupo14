@@ -5,15 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import junit.framework.TestCase;
 
-public class testExcelController extends TestCase{
+public class testExcelController extends TestCase {
 
 	private static ExcelController excel;
-//
-//	@BeforeAll
-//	static public void setUpBeforeClass() throws Exception {
-//		excel = new ExcelController();
-//		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
-//	}
 
 	@Test
 	public void testReadExcel() throws Exception {
