@@ -14,7 +14,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 /**
  * 
  * Esta classe representa o algoritmo que devolve os métodos defeituosos e
- * indicadores de qualidade, consoante a utilização de dada regra/ferramenta.
+ * indicadores de qualidade, consoante a utilização de uma dada regra/ferramenta.
  * 
  * @author Lucas Oliveira.
  * @version 1.0
