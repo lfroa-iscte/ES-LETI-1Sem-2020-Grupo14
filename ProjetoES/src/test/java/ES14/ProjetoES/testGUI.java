@@ -1,7 +1,5 @@
 package ES14.ProjetoES;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 import junit.framework.TestCase;
@@ -17,7 +15,7 @@ public class testGUI extends TestCase {
 		g.showErrorDialog("JUnit test", 200, 150);
 		g.setPopUp("Definir regra - LongMethod");
 		g.setPopUp("Definir regra - FeatureEnvy");
-		g.setExcelFrame("Defeitos.xlsx", excel.getData(),excel.getHeaders());
+		g.setExcelFrame("Defeitos.xlsx", excel.getData(), excel.getHeaders());
 
 	}
 

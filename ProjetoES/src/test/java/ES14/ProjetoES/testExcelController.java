@@ -1,14 +1,14 @@
 package ES14.ProjetoES;
 
-import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import junit.framework.TestCase;
 
-public class testExcelController extends TestCase {
+public class testExcelController extends TestCase{
 
 	private static ExcelController excel;
-
+//
 //	@BeforeAll
 //	static public void setUpBeforeClass() throws Exception {
 //		excel = new ExcelController();
