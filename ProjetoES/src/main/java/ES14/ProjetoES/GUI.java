@@ -257,7 +257,7 @@ public class GUI {
 	 * conteúdo lido de um ficheiro excel.
 	 * 
 	 * 
-	 * @param nome.
+	 * @param nome 			Nome do ficheiro excel.
 	 * 
 	 * @see ExcelController
 	 * 

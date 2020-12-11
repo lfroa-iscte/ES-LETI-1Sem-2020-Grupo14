@@ -54,7 +54,7 @@ public class ExcelController {
 	/**
 	 * Devolve a sheet do excel.
 	 * 
-	 * @return XSSFSheet.
+	 * @return 				XSSFSheet Devolve as sheets do excel.
 	 * 
 	 * @author Francisco Mendes.
 	 */
@@ -65,7 +65,7 @@ public class ExcelController {
 	/**
 	 * Devolve os headers do excel num vetor.
 	 * 
-	 * @return String[].
+	 * @return String[] 	Devolve um vetor de strings com os headers do excel.
 	 * 
 	 * @author Francisco Mendes.
 	 */
@@ -76,7 +76,7 @@ public class ExcelController {
 	/**
 	 * Devolve os dados do excel numa matriz.
 	 * 
-	 * @return String[][].
+	 * @return String[][] 	Devolve uma matriz de strings com os dados do excel.
 	 * 
 	 * @author Francisco Mendes.
 	 */
