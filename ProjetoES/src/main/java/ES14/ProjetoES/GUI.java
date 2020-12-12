@@ -96,7 +96,6 @@ public class GUI {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-//					setExcelFrame(selectedFile.getName());
 					setExcelFrame(selectedFile.getName(), excel_controller.getData(), excel_controller.getHeaders());
 				}
 
@@ -275,7 +274,6 @@ public class GUI {
 		janelaExcel.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		JTable tabela = new JTable(data, headers);
-//		JTable tabela = new JTable(excel_controller.getData(), excel_controller.getHeaders());
 		tabela.setEnabled(false);
 
 		JScrollPane center = new JScrollPane(tabela);
