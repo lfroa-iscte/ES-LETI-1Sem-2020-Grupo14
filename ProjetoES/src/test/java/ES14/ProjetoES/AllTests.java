@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
  * Todas as classes de testes que estejam incluídas na suite serão executadas de
  * uma vez.
  * 
- * @see testAlgoritmo
- * @see testExcelController
- * @see testApp
- * @see testGUI
+ * @see AlgoritmoTest
+ * @see ExcelControllerTest
+ * @see AppTest
+ * @see GUITest
  * 
  * @author Francisco Mendes
  * @author Tomás Santos
