@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
  * 
  * @see AlgoritmoTest
  * @see ExcelControllerTest
- * @see AppTest
  * @see GUITest
  * 
  * @author Francisco Mendes

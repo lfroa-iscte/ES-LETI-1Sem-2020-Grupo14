@@ -257,8 +257,9 @@ public class GUI {
 	 * conteúdo lido de um ficheiro excel.
 	 * 
 	 * 
-	 * @param nome Nome do ficheiro excel.
-	 * 
+	 * @param nome    	Nome do ficheiro excel.
+	 * @param data    	Dados do ficheiro excel.
+	 * @param headers	Headers do ficheiro excel.
 	 * @see ExcelController
 	 * 
 	 * @author Tomás Santos

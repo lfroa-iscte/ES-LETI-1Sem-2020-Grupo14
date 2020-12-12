@@ -1,12 +1,10 @@
 package ES14.ProjetoES;
 
 /**
- * <h1>App
- * <h1>
  * <p>
  * A classe App implementa uma aplicação para avaliação da qualidade de deteção
  * de defeitos (code smells) de desenho em projetos de software.
- * <p>
+ * </p>
  * 
  * @author Francisco Mendes
  * @author Tomás Santos
