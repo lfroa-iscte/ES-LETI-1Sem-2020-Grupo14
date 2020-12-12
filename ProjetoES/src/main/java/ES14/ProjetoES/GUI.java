@@ -308,20 +308,20 @@ public class GUI {
 
 	/**
 	 * Cria e mostra uma janela (temporária) para o utilizador definir as suas
-	 * próprias regras consoante o code smell escolhido em <i>aux</i>.
+	 * próprias regras consoante o code smell escolhido em <i>codeSmell</i>.
 	 * 
-	 * @param aux Code smell escolhido pelo utilizador.
+	 * @param codeSmell Code smell escolhido pelo utilizador.
 	 * 
 	 * @author Tomás Santos.
 	 * @author Francisco Mendes.
 	 */
 
-	public void setPopUp(String aux) {
+	public void setPopUp(String codeSmell) {
 		contadorRegras = 0;
 		listaRegras = new ArrayList<Regra>();
 		regras = new JTextArea();
 
-		janelaRegras = new JDialog(janela, aux);
+		janelaRegras = new JDialog(janela, codeSmell);
 		janelaRegras.pack();
 		janelaRegras.setSize(800, 600);
 		janelaRegras.setLocation(janela.getWidth() / 2 - 400, janela.getHeight() / 2 - 300);
@@ -334,52 +334,24 @@ public class GUI {
 
 		mainPanel = new JPanel(new BorderLayout());
 		thresholdsPanel = new JPanel(new BorderLayout());
-		GridBagLayout layout = new GridBagLayout();
-		JPanel thresholds = new JPanel(layout);
+		JPanel thresholds = setThresholdsPanel();
 		JPanel checkRule = new JPanel(new FlowLayout());
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 		JPanel button_aux = new JPanel(new FlowLayout());
 
 		String[] longMethod = { "LOC", "CYCLO" };
 		String[] featureEnvy = { "ATFD", "LAA" };
-		String[] operadores = { ">", "<", ">=", "<=" };
-
-		metricas = new JComboBox<String>();
-		operador = new JComboBox<String>(operadores);
-
 		rulePanel = new JPanel(new FlowLayout());
 
-		if (aux.equals("Definir regra - LongMethod")) {
+		if (codeSmell.equals("Definir regra - LongMethod")) {
 			for (String string : longMethod) {
 				metricas.addItem(string);
 			}
-		} else if (aux.equals("Definir regra - FeatureEnvy")) {
+		} else if (codeSmell.equals("Definir regra - FeatureEnvy")) {
 			for (String string : featureEnvy) {
 				metricas.addItem(string);
 			}
 		}
-
-		threshold = new JTextField();
-
-		GridBagConstraints gbc = new GridBagConstraints();
-
-		gbc.ipadx = 30;
-		gbc.ipady = 5;
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		thresholds.add(metricas, gbc);
-
-		gbc.ipadx = 30;
-		gbc.ipady = 5;
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		thresholds.add(operador, gbc);
-
-		gbc.ipadx = 50;
-		gbc.ipady = 10;
-		gbc.gridx = 2;
-		gbc.gridy = 0;
-		thresholds.add(threshold, gbc);
 
 		addThreshold.addActionListener(new ActionListener() {
 
@@ -483,9 +455,6 @@ public class GUI {
 			}
 		});
 
-		thresholds.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-				"Definição de Thresholds", TitledBorder.CENTER, TitledBorder.TOP));
-
 		button_aux.add(addThreshold);
 		button_aux.add(reset);
 		button_aux.add(confirmar_thresholds);
@@ -500,6 +469,54 @@ public class GUI {
 
 		janelaRegras.setVisible(true);
 
+	}
+
+	/**
+	 * Método que inicializa o painel para o utilizador poder definir as suas
+	 * próprias regras.
+	 * 
+	 * @return JPanel Painel com os componentes para definição de regras.
+	 * 
+	 * @author Francisco Mendes
+	 * @author Tomás Santos
+	 */
+
+	private JPanel setThresholdsPanel() {
+		GridBagLayout layout = new GridBagLayout();
+		JPanel thresholds = new JPanel(layout);
+		String[] operadores = { ">", "<", ">=", "<=" };
+		metricas = new JComboBox<String>();
+		operador = new JComboBox<String>(operadores);
+		threshold = new JTextField();
+		thresholds.add(metricas, gbc(30, 5, 0, 0));
+		thresholds.add(operador, gbc(30, 5, 1, 0));
+		thresholds.add(threshold, gbc(50, 10, 2, 0));
+		thresholds.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+				"Definição de Thresholds", TitledBorder.CENTER, TitledBorder.TOP));
+		return thresholds;
+	}
+
+	/**
+	 * Método que define a posição de um componente num GridBagLayout.
+	 * 
+	 * @param w Largura do componente.
+	 * @param h Altura do componente.
+	 * @param x Posição em x do componente.
+	 * @param y Posição em y do componente.
+	 * 
+	 * @return GridBagConstraints GridBagConstraints com as posições definidas.
+	 * 
+	 * @author Francisco Mendes
+	 * @author Tomás Santos
+	 */
+
+	private GridBagConstraints gbc(int w, int h, int x, int y) {
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.ipadx = w;
+		gbc.ipady = h;
+		gbc.gridx = x;
+		gbc.gridy = y;
+		return gbc;
 	}
 
 }

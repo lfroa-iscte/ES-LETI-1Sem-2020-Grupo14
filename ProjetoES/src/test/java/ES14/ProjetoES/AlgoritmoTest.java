@@ -43,7 +43,7 @@ public class AlgoritmoTest extends TestSuite {
 	static void setUpBeforeClass() throws Exception {
 		XSSFWorkbook workbook = null;
 		try {
-			workbook = new XSSFWorkbook(new File("C:\\Users\\lucas\\Documents\\Faculdade 2020\\ES\\Defeitos.xlsx"));
+			workbook = new XSSFWorkbook(new File("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
