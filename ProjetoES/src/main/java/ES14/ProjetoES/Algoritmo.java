@@ -94,7 +94,7 @@ public class Algoritmo {
 			Row row = rowIterator.next();
 
 			if (row.getRowNum() != 0) {
-				Boolean value = longMethodSmell(smell, row);
+				Boolean value = isSmell(smell, row);
 				if (value && methods.contains(row.getRowNum()))
 					indicadores.put("DCI", indicadores.get("DCI") + 1);
 				else if (!value && methods.contains(row.getRowNum()))
@@ -109,7 +109,18 @@ public class Algoritmo {
 		indicadoresQualidade = mapToMatrix(indicadores);
 	}
 
-	private Boolean longMethodSmell(String ferramenta, Row row) {
+	/**
+	 * Devolve o valor Boolean (true ou false) da coluna de um tipo de code
+	 * smell(isLongMethod ou FeatureEnvy). Utilizado internamente pelo método
+	 * checkIndicadoresRegra().
+	 * 
+	 * @param ferramenta Representa o tipo de code smell.
+	 * @param row        Representa o método em questão.
+	 * @return Boolean
+	 * @author Lucas Oliveira.
+	 */
+
+	private Boolean isSmell(String ferramenta, Row row) {
 		Boolean value = false;
 		if (ferramenta.equals("FeatureEnvy"))
 			value = row.getCell(featureEnvy).getBooleanCellValue();
@@ -123,7 +134,8 @@ public class Algoritmo {
 	 * neste caso por uma lista de métricas e respetivas thresholds e op. lógicos.
 	 * Utilizado internamente pelo método runAlgoritmo().
 	 * 
-	 * @param regras Representa a lista de métricas, thresholds e op. lógicos.
+	 * @param regras Lista de métricas, thresholds e op. lógicos que representam a
+	 *               regra.
 	 * @author Lucas Oliveira.
 	 */
 	private void retMetodosRegra(List<Regra> regras) {
@@ -131,6 +143,16 @@ public class Algoritmo {
 		iteradorSheetRegra(regras);
 		metodos = arrayToMatrix(methods);
 	}
+
+	/**
+	 * Itera sobre a Sheet de Excel, verificando para cada linha(método) se existe
+	 * code smell, dada uma regra representada por uma lista de métricas, thresholds
+	 * e op. lógicos. Utilizado internamente pelo método retMetodosRegra().
+	 * 
+	 * @param regras Lista de métricas, thresholds e op. lógicos que representam uma
+	 *               regra.
+	 * @author Lucas Oliveira.
+	 */
 
 	private void iteradorSheetRegra(List<Regra> regras) {
 		Iterator<Row> rowIterator = sheet.iterator();
@@ -143,9 +165,8 @@ public class Algoritmo {
 	}
 
 	/**
-	 * Dada uma linha do Excel e uma regra, caso o método dessa linha seja
-	 * defeituoso, guarda-o numa lista Utilizado internamente pelo método
-	 * retMetodosRegra().
+	 * Dada uma linha do Excel e uma regra, verifica se o método tem code smell.
+	 * Utilizado internamente pelo método retMetodosRegra().
 	 * 
 	 * @param row    Linha do Excel.
 	 * @param regras Conjunto de métricas, thresholds e op. lógicos que representam
@@ -158,11 +179,37 @@ public class Algoritmo {
 		metodosRegra(row, regras, smell);
 	}
 
+	/**
+	 * 
+	 * Adiciona os métodos que cumprem a regra a uma lista. Utilizado internamente
+	 * pelo método checkForSmell().
+	 * 
+	 * @param row    Linha(Método) a analisar.
+	 * @param regras Conjunto de métricas, thresholds e op. lógicos que representam
+	 *               a regra.
+	 * @param smell  Representa um Boolean.
+	 * @throws NumberFormatException
+	 * @author Lucas Oliveira.
+	 */
 	private void metodosRegra(Row row, List<Regra> regras, boolean smell) throws NumberFormatException {
 		smell = smell(row, regras, smell);
 		if (smell == true)
 			methods.add(row.getRowNum());
 	}
+
+	/**
+	 * 
+	 * Indica se o método, consoante uma dada regra, tem code smell. Utilizado
+	 * internamente pelo método metodosRegra().
+	 * 
+	 * @param row    Linha(Método) a analisar.
+	 * @param regras Conjunto de métricas, thresholds e op. lógicos que representam
+	 *               a regra.
+	 * @param smell  Indica se o método tem code smell.
+	 * @return boolean.
+	 * @throws NumberFormatException
+	 * @author Lucas Oliveira.
+	 */
 
 	private boolean smell(Row row, List<Regra> regras, boolean smell) throws NumberFormatException {
 		for (Regra i : regras) {
@@ -223,6 +270,15 @@ public class Algoritmo {
 		metodos = arrayToMatrix(methods);
 	}
 
+	/**
+	 * Itera sobre a Sheet de Excel, verificando para cada linha(método) se existe
+	 * code smell, dada uma ferramenta. Utilizado internamente pelo método
+	 * retMetodosRegra().
+	 * 
+	 * @param ferramenta Representa a ferramenta utilizada.
+	 * @author Lucas Oliveira.
+	 */
+
 	private void iteradorSheetFerramenta(String ferramenta) {
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
@@ -232,6 +288,15 @@ public class Algoritmo {
 			}
 		}
 	}
+
+	/**
+	 * Adiciona a uma lista os métodos defeituosos, consoante a ferramenta
+	 * utilizada. Utilizado internamente pelo método iteradorSheetFerramenta().
+	 * 
+	 * @param ferramenta Representa a ferramenta utilizada.
+	 * @param row        Representa a linha(método) em questão.
+	 * @author Lucas Oliveira.
+	 */
 
 	private void metodosFerramenta(String ferramenta, Row row) {
 		if (ferramenta.equals("iPlasma")) {
@@ -248,9 +313,10 @@ public class Algoritmo {
 
 	/**
 	 * Guarda os indicadores de qualidade de uma dada ferramenta numa matriz
+	 * Utilizado internamente pelo método runAlgoritmo().
 	 * 
 	 * @param ferramenta Representa a ferramenta selecionada.
-	 * @author Lucas Oliveira
+	 * @author Lucas Oliveira.
 	 */
 	private void checkIndicadoresFerramenta(String ferramenta) {
 
@@ -274,6 +340,15 @@ public class Algoritmo {
 
 		indicadoresQualidade = mapToMatrix(indicadores);
 	}
+
+	/**
+	 * Indica se existe code smell num dado método, consoante a ferramenta
+	 * utilizada. Utilizado internamente pelo método checkIndicadoresFerramenta().
+	 * 
+	 * @param ferramenta Representa a ferramenta a ser utilizada.
+	 * @param row        Representa a linha(método) a ser verificado.
+	 * @return Boolean
+	 */
 
 	private Boolean value1(String ferramenta, Row row) {
 		Boolean value1 = false;
@@ -309,7 +384,7 @@ public class Algoritmo {
 	/**
 	 * Converte um Map<String, Integer> numa matriz de Strings. Utilizado
 	 * internamente pelos métodos checkIndicadoresFerramenta() e
-	 * checkIndicadoreRegra().
+	 * checkIndicadoresRegra().
 	 * 
 	 * @param aux Map<String, Integer>
 	 * @return String[][] Devolve uma matriz de strings.
