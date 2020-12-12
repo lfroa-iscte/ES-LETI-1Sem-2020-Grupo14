@@ -28,7 +28,7 @@ public class GUITest {
 		App app = new App();
 		app.main(null);
 		ExcelController excel = new ExcelController();
-		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
+		excel.readExcel("C:\\Users\\tomas\\OneDrive\\Ambiente de Trabalho\\Defeitos.xlsx");
 		GUI g = new GUI();
 		g.open();
 		g.showErrorDialog("JUnit test", 200, 150);

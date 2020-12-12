@@ -93,12 +93,7 @@ public class Algoritmo {
 			Row row = rowIterator.next();
 
 			if (row.getRowNum() != 0) {
-				Boolean value = false;
-				if (ferramenta.equals("FeatureEnvy"))
-					value = row.getCell(featureEnvy).getBooleanCellValue();
-				else
-					value = row.getCell(isLong).getBooleanCellValue();
-
+				Boolean value = anotherTwo(ferramenta, row);
 				if (value && methods.contains(row.getRowNum()))
 					indicadores.put("DCI", indicadores.get("DCI") + 1);
 				else if (!value && methods.contains(row.getRowNum()))
@@ -113,6 +108,15 @@ public class Algoritmo {
 		indicadoresQualidade = mapToMatrix(indicadores);
 	}
 
+	private Boolean anotherTwo(String ferramenta, Row row) {
+		Boolean value = false;
+		if (ferramenta.equals("FeatureEnvy"))
+			value = row.getCell(featureEnvy).getBooleanCellValue();
+		else
+			value = row.getCell(isLong).getBooleanCellValue();
+		return value;
+	}
+
 	/**
 	 * Guarda numa matriz os métodos defeituosos consoante uma regra, representada
 	 * neste caso por uma lista de métricas e respetivas thresholds e op. lógicos.
@@ -123,16 +127,18 @@ public class Algoritmo {
 	 */
 	private void retMetodosRegra(List<Regra> regras) {
 
+		anotherOne(regras);
+		metodos = arrayToMatrix(methods);
+	}
+
+	private void anotherOne(List<Regra> regras) {
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
-
 			if (row.getRowNum() != 0) {
 				checkForSmell(row, regras);
-
 			}
 		}
-		metodos = arrayToMatrix(methods);
 	}
 
 	/**
@@ -148,35 +154,37 @@ public class Algoritmo {
 
 	private void checkForSmell(Row row, List<Regra> regras) {
 		boolean smell = false;
-		for (Regra i : regras) {
+		methods(row, regras, smell);
+	}
 
+	private void methods(Row row, List<Regra> regras, boolean smell) throws NumberFormatException {
+		smell = smell(row, regras, smell);
+		if (smell == true)
+			methods.add(row.getRowNum());
+	}
+
+	private boolean smell(Row row, List<Regra> regras, boolean smell) throws NumberFormatException {
+		for (Regra i : regras) {
 			int cell = metrica(i.getMetrica());
 			if (regras.indexOf(i) == 0 || (!smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("OR"))
 					|| (smell && regras.get(regras.indexOf(i) - 1).getOpLogico().equals("AND"))) {
-
 				Cell temp = row.getCell(cell);
 				DataFormatter dataFormatter = new DataFormatter();
 				String t = dataFormatter.formatCellValue(temp);
 				double num = Double.parseDouble(t);
-
 				if (i.getOp().equals(">") && num > i.getValor())
 					smell = true;
-
 				else if (i.getOp().equals(">=") && num >= i.getValor())
 					smell = true;
-
 				else if (i.getOp().equals("<") && num < i.getValor())
 					smell = true;
-
 				else if (i.getOp().equals("<=") && num <= i.getValor())
 					smell = true;
-
 				else
 					smell = false;
 			}
 		}
-		if (smell == true)
-			methods.add(row.getRowNum());
+		return smell;
 	}
 
 	/**
@@ -210,24 +218,39 @@ public class Algoritmo {
 	 */
 	private void retMetodos(String ferramenta) {
 
-		Iterator<Row> rowIterator = sheet.iterator();
-		while (rowIterator.hasNext()) {
-			Row row = rowIterator.next();
-
-			if (row.getRowNum() != 0) {
-				if (ferramenta.equals("iPlasma")) {
-					Boolean value = row.getCell(iPlasma).getBooleanCellValue();
-					if (value)
-						methods.add(row.getRowNum());
-				}
-				if (ferramenta.equals("PMD")) {
-					Boolean value = row.getCell(pmd).getBooleanCellValue();
-					if (value)
-						methods.add(row.getRowNum());
-				}
-			}
-		}
+		jdeodorant(ferramenta);
 		metodos = arrayToMatrix(methods);
+	}
+
+	private void jdeodorant(String ferramenta) {
+		Iterator<Row> rowIterator = sheet.iterator();
+		jdeodorant1(ferramenta, rowIterator);
+	}
+
+	private void jdeodorant1(String ferramenta, Iterator<Row> rowIterator) {
+		while (rowIterator.hasNext()) {
+			jdeodorant2(ferramenta, rowIterator);
+		}
+	}
+
+	private void jdeodorant2(String ferramenta, Iterator<Row> rowIterator) {
+		Row row = rowIterator.next();
+		if (row.getRowNum() != 0) {
+			jdeodorant3(ferramenta, row);
+		}
+	}
+
+	private void jdeodorant3(String ferramenta, Row row) {
+		if (ferramenta.equals("iPlasma")) {
+			Boolean value = row.getCell(iPlasma).getBooleanCellValue();
+			if (value)
+				methods.add(row.getRowNum());
+		}
+		if (ferramenta.equals("PMD")) {
+			Boolean value = row.getCell(pmd).getBooleanCellValue();
+			if (value)
+				methods.add(row.getRowNum());
+		}
 	}
 
 	/**
@@ -244,13 +267,7 @@ public class Algoritmo {
 
 			if (row.getRowNum() != 0) {
 				Boolean value = row.getCell(isLong).getBooleanCellValue();
-				Boolean value1 = false;
-
-				if (ferramenta.equals("iPlasma"))
-					value1 = row.getCell(iPlasma).getBooleanCellValue();
-				else
-					value1 = row.getCell(pmd).getBooleanCellValue();
-
+				Boolean value1 = value1(ferramenta, row);
 				if (value && value1)
 					indicadores.put("DCI", indicadores.get("DCI") + 1);
 				else if (!value && value1)
@@ -263,6 +280,15 @@ public class Algoritmo {
 		}
 
 		indicadoresQualidade = mapToMatrix(indicadores);
+	}
+
+	private Boolean value1(String ferramenta, Row row) {
+		Boolean value1 = false;
+		if (ferramenta.equals("iPlasma"))
+			value1 = row.getCell(iPlasma).getBooleanCellValue();
+		else
+			value1 = row.getCell(pmd).getBooleanCellValue();
+		return value1;
 	}
 
 	/**

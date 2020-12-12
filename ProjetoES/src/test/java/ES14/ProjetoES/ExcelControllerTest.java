@@ -31,7 +31,7 @@ public class ExcelControllerTest {
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		excel = new ExcelController();
-		excel.readExcel("C:\\Users\\fnpm\\Desktop\\Defeitos.xlsx");
+		excel.readExcel("C:\\Users\\tomas\\OneDrive\\Ambiente de Trabalho\\Defeitos.xlsx");
 	}
 
 	/**
