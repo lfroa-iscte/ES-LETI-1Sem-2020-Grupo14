@@ -220,18 +220,32 @@ public class Algoritmo {
 				DataFormatter dataFormatter = new DataFormatter();
 				String t = dataFormatter.formatCellValue(temp);
 				double num = Double.parseDouble(t);
-				if (i.getOp().equals(">") && num > i.getValor())
-					smell = true;
-				else if (i.getOp().equals(">=") && num >= i.getValor())
-					smell = true;
-				else if (i.getOp().equals("<") && num < i.getValor())
-					smell = true;
-				else if (i.getOp().equals("<=") && num <= i.getValor())
-					smell = true;
-				else
-					smell = false;
+				smell = check(i, num);
 			}
 		}
+		return smell;
+	}
+
+	/**
+	 * Método para verificar se para uma dada metrica e threshold existe code smell.
+	 * 
+	 * @param i 		Métrica da regra.
+	 * @param num		Valor da threshold.
+	 * @return boolean	
+	 */
+	
+	private boolean check(Regra i, double num) {
+		boolean smell;
+		if (i.getOp().equals(">") && num > i.getValor())
+			smell = true;
+		else if (i.getOp().equals(">=") && num >= i.getValor())
+			smell = true;
+		else if (i.getOp().equals("<") && num < i.getValor())
+			smell = true;
+		else if (i.getOp().equals("<=") && num <= i.getValor())
+			smell = true;
+		else
+			smell = false;
 		return smell;
 	}
 
@@ -382,11 +396,11 @@ public class Algoritmo {
 	}
 
 	/**
-	 * Converte um Map<String, Integer> numa matriz de Strings. Utilizado
+	 * Converte um Map de String e Integer numa matriz de Strings. Utilizado
 	 * internamente pelos métodos checkIndicadoresFerramenta() e
 	 * checkIndicadoresRegra().
 	 * 
-	 * @param aux Map<String, Integer>
+	 * @param aux Map de String e Integer
 	 * @return String[][] Devolve uma matriz de strings.
 	 * 
 	 * @author Lucas Oliveira

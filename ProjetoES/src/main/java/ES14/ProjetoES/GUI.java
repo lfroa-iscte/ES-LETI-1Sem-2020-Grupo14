@@ -60,8 +60,8 @@ public class GUI {
 	/**
 	 * Adiciona os conteúdos à janela principal.
 	 * 
-	 * @see ExcelController.
-	 * @see Algoritmo.
+	 * @see ExcelController
+	 * @see Algoritmo
 	 * 
 	 * @author Tomás Santos.
 	 * @author Francisco Mendes.
